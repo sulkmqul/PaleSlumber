@@ -1,52 +1,14 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace PaleSlumber
 {
-    /// <summary>
-    /// イベント一覧
-    /// </summary>
-    enum EPaleSlumberEvent
-    {
-        /// <summary>
-        /// 再生開始
-        /// </summary>
-        PlayStart,
-        /// <summary>
-        /// 一時停止
-        /// </summary>
-        PlayPause,
-        /// <summary>
-        /// 再生停止
-        /// </summary>
-        PlayStop,
-        /// <summary>
-        /// 次の曲へ
-        /// </summary>
-        PlayNext,
-        /// <summary>
-        /// 前の曲へ
-        /// </summary>
-        PlayPrev,
-        /// <summary>
-        /// プレイリストに追加
-        /// </summary>
-        AddPlayList,
-        /// <summary>
-        /// プレイリストを削除
-        /// </summary>
-        RemovePlayList,
-        /// <summary>
-        /// プレイリストを初期化
-        /// </summary>
-        InitPlayList,
-
-        
-
-    }
+    
 
     /// <summary>
     /// プレイヤーモード

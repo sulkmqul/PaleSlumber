@@ -21,11 +21,39 @@ namespace PaleSlumber
             this.Grid = view;
         }
 
+        
         #region メンバ変数
         /// <summary>
         /// 管理グリッド
         /// </summary>
         private ListView Grid { get; init; }
+        
+        /// <summary>
+        /// 再生ファイル情報の取得
+        /// </summary>
+        public List<PlayListFileData> SelectedFileList
+        {
+            get
+            {
+                List<PlayListFileData> anslist = new List<PlayListFileData>();
+
+                //対象のファイルを取得
+                foreach (ListViewItem item in this.Grid.SelectedItems)
+                {
+                    PlayListFileData? tag = item.Tag as PlayListFileData;
+                    if (tag != null)
+                    {
+                        anslist.Add(tag);
+                    }
+                }
+                return anslist;
+            }
+        }
+
+        /// <summary>
+        /// マウス情報
+        /// </summary>
+        private MouseInfo MInfo { get; init; } = new MouseInfo();
         #endregion
 
         /// <summary>
@@ -35,20 +63,90 @@ namespace PaleSlumber
         {
             this.Grid.Items.Clear();
             this.Grid.GridLines = true;
+            this.Grid.FullRowSelect = true;
+            this.Grid.MultiSelect = true;
 
             //ヘッダーの作成
             this.CreateHeader();
 
-            //描画変更を検知
-            PaleGlobal.Mana.EventSub.Where(x =>
-            (x == EPaleSlumberEvent.InitPlayList ||
-            x == EPaleSlumberEvent.AddPlayList ||
-            x == EPaleSlumberEvent.RemovePlayList))
-                .Subscribe(x =>
-                {
-                    this.DisplayList();
-                });
+        }
 
+        /// <summary>
+        /// プレイリストの描画
+        /// </summary>
+        public void DisplayList()
+        {
+            System.Diagnostics.Trace.WriteLine("Grid DisplayList");
+
+            //描画処理
+            this.Grid.Items.Clear();
+            var plist = PaleGlobal.Mana.PlayList;
+            foreach (var data in plist.PlayList)
+            {
+                //表示用データ作成
+                var list = this.CreateGridData(data);
+
+                var item = new ListViewItem(list.ToArray());
+                item.Tag = data;
+                item.Selected = plist.CheckSelected(data);
+
+                this.Grid.Items.Add(item);
+            }
+
+            //選択対象を表示させる
+            if (this.Grid.SelectedIndices.Count > 0)
+            {
+                this.Grid.EnsureVisible(this.Grid.SelectedIndices[0]);
+            }
+
+        }
+
+        /// <summary>
+        /// マウス押された
+        /// </summary>
+        /// <param name="e"></param>
+        public void DownMouse(MouseEventArgs e)
+        {
+            this.MInfo.DownMouse(e);
+        }
+        /// <summary>
+        /// マウス動いた
+        /// </summary>
+        /// <param name="e"></param>
+        public void MoveMouse(MouseEventArgs e)
+        {
+            this.MInfo.MoveMouse(e);
+            if (this.MInfo.DownFlag == false)
+            {
+                return;
+            }
+
+            int ni = this.CalcuInsertIndex(e.Location);
+            this.Grid.InsertionMark.Index = ni;
+        }
+
+        /// <summary>
+        /// マウス離した
+        /// </summary>
+        /// <param name="e"></param>
+        public void UpMouse(MouseEventArgs e)
+        {
+            this.MInfo.UpMouse(e);
+
+            //離した位置をメモリに追加しておく
+            int ni = this.CalcuInsertIndex(e.Location);
+            this.MInfo.SetMemory(ni);
+
+            this.Grid.InsertionMark.Index = -1;            
+        }
+
+        /// <summary>
+        /// 入れ替え挿入位置を取得
+        /// </summary>
+        /// <returns></returns>
+        public int GetReplaceIndex()
+        {
+            return this.MInfo.GetMemory<int>(-1);
         }
         //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
         /// <summary>
@@ -67,20 +165,7 @@ namespace PaleSlumber
         }
 
 
-        /// <summary>
-        /// プレイリストの描画
-        /// </summary>
-        private void DisplayList()
-        {
-            this.Grid.Items.Clear();
-            var plist = PaleGlobal.Mana.PlayList;
-            foreach (var data in plist.PlayList)
-            {
-                //表示用データ作成
-                var list = this.CreateGridData(data);
-                this.Grid.Items.Add(new ListViewItem(list.ToArray()));
-            }
-        }
+        
 
         /// <summary>
         /// 表示データの作成
@@ -99,6 +184,26 @@ namespace PaleSlumber
             anslist.Add(data.FilePath);
 
             return anslist;
+
+        }
+
+        /// <summary>
+        /// 挿入位置を計算する
+        /// </summary>
+        /// <param name="mpos">今のマウス位置</param>
+        /// <returns>挿入位置 マイナス=無効</returns>
+        private int CalcuInsertIndex(Point mpos)
+        {
+            //一番近いindexを計算
+            int ans = this.Grid.InsertionMark.NearestIndex(mpos);
+
+            //選択範囲の中なら無効とする
+            bool f = this.Grid.SelectedIndices.Contains(ans);
+            if (f == true)
+            {
+                ans = -1;
+            }
+            return ans;
 
         }
     }

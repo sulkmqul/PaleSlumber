@@ -62,6 +62,7 @@
             // 
             // listViewPlayList
             // 
+            listViewPlayList.Activation = ItemActivation.OneClick;
             listViewPlayList.Dock = DockStyle.Fill;
             listViewPlayList.FullRowSelect = true;
             listViewPlayList.Location = new Point(0, 200);
@@ -70,6 +71,13 @@
             listViewPlayList.TabIndex = 6;
             listViewPlayList.UseCompatibleStateImageBehavior = false;
             listViewPlayList.View = View.Details;
+            listViewPlayList.ItemMouseHover += listViewPlayList_ItemMouseHover;
+            listViewPlayList.ItemSelectionChanged += listViewPlayList_ItemSelectionChanged;
+            listViewPlayList.SelectedIndexChanged += listViewPlayList_SelectedIndexChanged;
+            listViewPlayList.DoubleClick += listViewPlayList_DoubleClick;
+            listViewPlayList.MouseDown += listViewPlayList_MouseDown;
+            listViewPlayList.MouseMove += listViewPlayList_MouseMove;
+            listViewPlayList.MouseUp += listViewPlayList_MouseUp;
             // 
             // panelSmallButton
             // 
@@ -93,6 +101,7 @@
             buttonSmallPause.Size = new Size(32, 32);
             buttonSmallPause.TabIndex = 3;
             buttonSmallPause.UseVisualStyleBackColor = false;
+            buttonSmallPause.Click += buttonSmallPause_Click;
             // 
             // buttonSmallStop
             // 
@@ -104,6 +113,7 @@
             buttonSmallStop.Size = new Size(32, 32);
             buttonSmallStop.TabIndex = 2;
             buttonSmallStop.UseVisualStyleBackColor = false;
+            buttonSmallStop.Click += buttonSmallStop_Click;
             // 
             // buttonSmallNext
             // 
@@ -115,6 +125,7 @@
             buttonSmallNext.Size = new Size(32, 32);
             buttonSmallNext.TabIndex = 1;
             buttonSmallNext.UseVisualStyleBackColor = false;
+            buttonSmallNext.Click += buttonSmallNext_Click;
             // 
             // buttonSmallPrev
             // 
@@ -126,6 +137,7 @@
             buttonSmallPrev.Size = new Size(32, 32);
             buttonSmallPrev.TabIndex = 0;
             buttonSmallPrev.UseVisualStyleBackColor = false;
+            buttonSmallPrev.Click += buttonSmallPrev_Click;
             // 
             // buttonSmallPlay
             // 
@@ -137,6 +149,7 @@
             buttonSmallPlay.Size = new Size(32, 32);
             buttonSmallPlay.TabIndex = 0;
             buttonSmallPlay.UseVisualStyleBackColor = false;
+            buttonSmallPlay.Click += buttonSmallPlay_Click;
             // 
             // playingProgress1
             // 
@@ -194,11 +207,14 @@
             ClientSize = new Size(784, 411);
             Controls.Add(listViewPlayList);
             Controls.Add(panelControl);
+            KeyPreview = true;
             Name = "MainForm";
             Text = "Pale Slumber";
+            FormClosed += MainForm_FormClosed;
             Load += MainForm_Load;
             DragDrop += MainForm_DragDrop;
             DragEnter += MainForm_DragEnter;
+            KeyDown += MainForm_KeyDown;
             panelSmallButton.ResumeLayout(false);
             panelControl.ResumeLayout(false);
             tableLayoutPanel1.ResumeLayout(false);

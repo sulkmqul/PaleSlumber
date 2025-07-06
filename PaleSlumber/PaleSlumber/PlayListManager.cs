@@ -11,7 +11,8 @@ namespace PaleSlumber
     /// 管理ファイル情報
     /// </summary>
     internal class PlayListFileData
-    {
+    {   
+
         /// <summary>
         /// これのファイル名(拡張子なし)
         /// </summary>
@@ -102,7 +103,23 @@ namespace PaleSlumber
         /// <summary>
         /// 表示順のシーケンス
         /// </summary>
-        public int Seq { get; private set; } = 0;
+        private int Seq { get; set; } = 0;
+
+        /// <summary>
+        /// 現在の選択中データ一覧
+        /// </summary>
+        private List<PlayListFileData> SelectedList { get; init; } = new List<PlayListFileData>();
+
+        /// <summary>
+        /// 選択ファイル
+        /// </summary>
+        public PlayListFileData? SelectedFile
+        {
+            get
+            {
+                return this.SelectedList.FirstOrDefault();
+            }
+        }
         #endregion
 
         /// <summary>
@@ -111,6 +128,7 @@ namespace PaleSlumber
         public void Init()
         {
             this.PlayList.Clear();
+            this.SelectedList.Clear();
             this.Seq = 0;
         }
 
@@ -118,7 +136,8 @@ namespace PaleSlumber
         /// 読み込み
         /// </summary>
         /// <param name="pathvec">読み込みパス一覧</param>
-        public async Task Load(string[] pathvec)
+        /// <returns>読み込めたもの一覧</returns>
+        public async Task<List<PlayListFileData>> Load(string[] pathvec)
         {
             List<string> pathlist = new List<string>();
 
@@ -130,28 +149,161 @@ namespace PaleSlumber
             }
 
             //対象パスの読み込み
-            await this.LoadPlayList(pathlist);
+            var rlist = await this.LoadPlayList(pathlist);
+
+            //選択を行う
+            this.SelectedList.Clear();
+            if (rlist.Count > 0)
+            {
+                this.SelectedList.Add(rlist.First());
+            }
+
+            return rlist;
         }
 
+                
+        /// <summary>
+        /// 対象のデータが選択されているかを確認する
+        /// </summary>
+        /// <param name="fdata"></param>
+        /// <returns></returns>
+        public bool CheckSelected(PlayListFileData fdata)
+        {
+            int c = this.SelectedList.Where(x => x.OrderNo == fdata.OrderNo).Count();
+            if (c <= 0)
+            {
+                return false;
+            }
+            return true;
+        }
 
+        /// <summary>
+        /// 選択に追加
+        /// </summary>
+        /// <param name="fdata"></param>
+        public void AddSelect(PlayListFileData fdata)
+        {
+            this.SelectedList.Add(fdata);
+        }
+
+        /// <summary>
+        /// 対象を選択
+        /// </summary>
+        /// <param name="fdata"></param>
+        public void Select(PlayListFileData fdata)
+        {
+            this.ClearSelect();
+            this.SelectedList.Add(fdata);
+        }
+        /// <summary>
+        /// 対象を選択
+        /// </summary>
+        /// <param name="index"></param>
+        public void Select(int index)
+        {
+            this.ClearSelect();
+
+            //そもそもデータがない
+            if (this.PlayList.Count <= 0)
+            {
+                return;
+            }
+            //indexが範囲外だった
+            if (index >= this.PlayList.Count)
+            {
+                //最後を選択
+                this.SelectedList.Add(this.PlayList.Last());
+                return;
+            }
+
+            //対象に追加
+            this.SelectedList.Add(this.PlayList[index]);
+
+        }
+
+        /// <summary>
+        /// 選択のクリア
+        /// </summary>
+        public void ClearSelect()
+        {
+            this.SelectedList.Clear();
+        }
+
+        /// <summary>
+        /// プレイリストの削除
+        /// </summary>
+        /// <param name="vec"></param>
+        public void RemovePlayList(PlayListFileData[] vec)
+        {
+            int rm = 0;
+
+            foreach (var data in vec)
+            {
+                rm = this.PlayList.IndexOf(data);
+                this.PlayList.Remove(data);
+            }
+
+            //対象の選択
+            this.Select(rm);            
+        }
+
+        /// <summary>
+        /// 選択を対象indexの場所にする
+        /// </summary>
+        /// <param name="index">挿入位置　マイナス=無効</param>
+        /// <returns>入れ替え成功可否</returns>
+        public bool ChangeOrder(int index)
+        {
+            //対象があるか？
+            if (index < 0 || this.SelectedList.Count <= 0)
+            {
+                return false;
+            }
+
+            int fi = this.PlayList.IndexOf(this.SelectedList.First());
+            int ipos = index;
+            //既存を削除
+            this.SelectedList.ForEach(x => this.PlayList.Remove(x));
+
+            //挿入位置の計算
+            //順番を下げるときは既存で削除した数=選択数を差し引いて考える
+            if (index > fi)
+            {
+                ipos = index - this.SelectedList.Count;
+                if (ipos < 0)
+                {
+                    ipos = 0;
+                }
+            }
+
+            this.PlayList.InsertRange(ipos, this.SelectedList);
+
+            return true;
+        }
+        //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
+        //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
         /// <summary>
         /// プレイリストの読み込み
         /// </summary>
         /// <param name="pathlist">読み込みパス一覧</param>
-        /// <returns></returns>
-        public async Task LoadPlayList(List<string> pathlist)
+        /// <returns>読み込めたもの一覧</returns>
+        private async Task<List<PlayListFileData>> LoadPlayList(List<string> pathlist)
         {
             List<Task<PlayListFileData?>> tlist = new List<Task<PlayListFileData?>>();
 
             //全データの概要の読み込み
             foreach (string path in pathlist)
             {
+                //コピーを取っておく
+                int n = this.Seq;
                 var t = Task<PlayListFileData?>.Run(() =>
                 {
                     try
                     {
                         PlayListFileData data = new PlayListFileData();
-                        data.Load(path, this.Seq);
+
+                        data.Load(path, n);
+
                         return data;
                     }
                     catch
@@ -160,33 +312,27 @@ namespace PaleSlumber
                     }
 
                 });
+
                 this.Seq += 1;
+
                 tlist.Add(t);
             }
 
-            //読み込み終了待ち
+            //読み込み終了待ち            
             var loaddata = await Task.WhenAll(tlist);
             if (loaddata == null)
             {
-                return;
+                return new List<PlayListFileData>();
             }
 
-            //読み込みに成功したファイルだけを取得
-            foreach (var item in loaddata)
-            {
-                if (item == null)
-                {
-                    continue;
-                }
-                    
-                this.PlayList.Add(item);
-            }
+            //null除外
+            List<PlayListFileData> rlist = loaddata.Where(x => x != null).Select(x => x!).ToList();
+            rlist.ForEach(x => this.PlayList.Add(x));
+
+
+            return rlist;
 
         }
-
-
-        //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
-        //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
 
         /// <summary>
         /// 対象のパスの全ファイルを取得

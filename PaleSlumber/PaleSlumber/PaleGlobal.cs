@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PaleSlumber
 {
-    class PaleGlobal
+    class PaleGlobal : IDisposable
     {
         private PaleGlobal()
         {
@@ -36,11 +36,23 @@ namespace PaleSlumber
         /// <summary>
         /// イベントSubject
         /// </summary>
-        public Subject<EPaleSlumberEvent> EventSub { get; init; } = new Subject<EPaleSlumberEvent>();
+        public Subject<PaleEvent> EventSub { get; init; } = new Subject<PaleEvent>();
+
+        /// <summary>
+        /// 再生管理
+        /// </summary>
+        public PlayingManager Player { get; init; } = new PlayingManager();
 
 
-
-
-
+        /// <summary>
+        /// 削除処理
+        /// </summary>
+        public void Dispose()
+        {
+            this.Player.Dispose();
+        }
     }
+
+
+
 }
