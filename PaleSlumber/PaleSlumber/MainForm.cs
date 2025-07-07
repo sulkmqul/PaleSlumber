@@ -109,8 +109,16 @@ namespace PaleSlumber
             int[] ch = { PaleConst.MiniModeControlHeight, PaleConst.NormalModeControlHeight };
             //画面サイズ制限
             Size[] limitsize = { PaleConst.MiniModeFormSize, new Size(0, 0) };
-
+            //表示可否
             bool[] modevisible = { false, true };
+
+            //コントロール部左側のサイズ
+            int[] tablecontrolwidth = { PaleConst.MiniModeControlLeftWidthPixel, PaleConst.NormalModeControlLeftWidthPercent };
+            //コントロール部左側のサイズ情報
+            SizeType[] tabletype = { SizeType.Absolute, SizeType.Percent };
+
+
+
 
             //値の設定
             this.MaximumSize = limitsize[n];
@@ -119,6 +127,8 @@ namespace PaleSlumber
             this.panelControl.Height = ch[n];
             this.listViewPlayList.Visible = modevisible[n];
             this.volumeControl1.TextVisible = modevisible[n];
+            this.tableLayoutPanelControl.ColumnStyles[0].Width = tablecontrolwidth[n];
+            this.tableLayoutPanelControl.ColumnStyles[0].SizeType = tabletype[n];
         }
 
         /// <summary>

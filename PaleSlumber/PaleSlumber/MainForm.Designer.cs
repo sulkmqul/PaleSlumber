@@ -41,10 +41,16 @@
             playingProgress1 = new PlayingProgress();
             buttonChangePlayerMode = new Button();
             panelControl = new Panel();
+            tableLayoutPanelControl = new TableLayoutPanel();
+            waveControl1 = new PaleSlumber.Wave.WaveControl();
+            panelControlLeft = new Panel();
             volumeControl1 = new VolumeControl();
             tableLayoutPanel1 = new TableLayoutPanel();
+            paleInfoControl1 = new PaleInfoControl();
             panelSmallButton.SuspendLayout();
             panelControl.SuspendLayout();
+            tableLayoutPanelControl.SuspendLayout();
+            panelControlLeft.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -87,16 +93,17 @@
             panelSmallButton.Controls.Add(buttonSmallNext);
             panelSmallButton.Controls.Add(buttonSmallPrev);
             panelSmallButton.Controls.Add(buttonSmallPlay);
-            panelSmallButton.Location = new Point(3, 3);
+            panelSmallButton.Dock = DockStyle.Top;
+            panelSmallButton.Location = new Point(0, 0);
             panelSmallButton.Name = "panelSmallButton";
-            panelSmallButton.Size = new Size(200, 32);
+            panelSmallButton.Size = new Size(366, 40);
             panelSmallButton.TabIndex = 7;
             // 
             // buttonSmallPause
             // 
             buttonSmallPause.ImageIndex = 2;
             buttonSmallPause.ImageList = imageListSmallIcon;
-            buttonSmallPause.Location = new Point(155, 0);
+            buttonSmallPause.Location = new Point(159, 6);
             buttonSmallPause.Margin = new Padding(0);
             buttonSmallPause.Name = "buttonSmallPause";
             buttonSmallPause.Size = new Size(32, 32);
@@ -108,7 +115,7 @@
             // 
             buttonSmallStop.ImageIndex = 6;
             buttonSmallStop.ImageList = imageListSmallIcon;
-            buttonSmallStop.Location = new Point(34, 0);
+            buttonSmallStop.Location = new Point(38, 6);
             buttonSmallStop.Margin = new Padding(0);
             buttonSmallStop.Name = "buttonSmallStop";
             buttonSmallStop.Size = new Size(32, 32);
@@ -120,7 +127,7 @@
             // 
             buttonSmallNext.ImageIndex = 1;
             buttonSmallNext.ImageList = imageListSmallIcon;
-            buttonSmallNext.Location = new Point(110, 0);
+            buttonSmallNext.Location = new Point(114, 6);
             buttonSmallNext.Margin = new Padding(0);
             buttonSmallNext.Name = "buttonSmallNext";
             buttonSmallNext.Size = new Size(32, 32);
@@ -132,7 +139,7 @@
             // 
             buttonSmallPrev.ImageIndex = 4;
             buttonSmallPrev.ImageList = imageListSmallIcon;
-            buttonSmallPrev.Location = new Point(78, 0);
+            buttonSmallPrev.Location = new Point(82, 6);
             buttonSmallPrev.Margin = new Padding(0);
             buttonSmallPrev.Name = "buttonSmallPrev";
             buttonSmallPrev.Size = new Size(32, 32);
@@ -144,7 +151,7 @@
             // 
             buttonSmallPlay.ImageIndex = 3;
             buttonSmallPlay.ImageList = imageListSmallIcon;
-            buttonSmallPlay.Location = new Point(2, 0);
+            buttonSmallPlay.Location = new Point(6, 6);
             buttonSmallPlay.Margin = new Padding(0);
             buttonSmallPlay.Name = "buttonSmallPlay";
             buttonSmallPlay.Size = new Size(32, 32);
@@ -174,10 +181,10 @@
             // 
             // panelControl
             // 
+            panelControl.Controls.Add(tableLayoutPanelControl);
             panelControl.Controls.Add(volumeControl1);
             panelControl.Controls.Add(playingProgress1);
             panelControl.Controls.Add(tableLayoutPanel1);
-            panelControl.Controls.Add(panelSmallButton);
             panelControl.Dock = DockStyle.Top;
             panelControl.Location = new Point(0, 0);
             panelControl.Margin = new Padding(0);
@@ -185,12 +192,45 @@
             panelControl.Size = new Size(784, 200);
             panelControl.TabIndex = 11;
             // 
+            // tableLayoutPanelControl
+            // 
+            tableLayoutPanelControl.ColumnCount = 2;
+            tableLayoutPanelControl.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanelControl.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanelControl.Controls.Add(waveControl1, 1, 0);
+            tableLayoutPanelControl.Controls.Add(panelControlLeft, 0, 0);
+            tableLayoutPanelControl.Dock = DockStyle.Fill;
+            tableLayoutPanelControl.Location = new Point(0, 0);
+            tableLayoutPanelControl.Name = "tableLayoutPanelControl";
+            tableLayoutPanelControl.RowCount = 1;
+            tableLayoutPanelControl.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanelControl.Size = new Size(744, 166);
+            tableLayoutPanelControl.TabIndex = 14;
+            // 
+            // waveControl1
+            // 
+            waveControl1.Dock = DockStyle.Fill;
+            waveControl1.Location = new Point(375, 3);
+            waveControl1.Name = "waveControl1";
+            waveControl1.Size = new Size(366, 160);
+            waveControl1.TabIndex = 8;
+            // 
+            // panelControlLeft
+            // 
+            panelControlLeft.Controls.Add(paleInfoControl1);
+            panelControlLeft.Controls.Add(panelSmallButton);
+            panelControlLeft.Dock = DockStyle.Fill;
+            panelControlLeft.Location = new Point(3, 3);
+            panelControlLeft.Name = "panelControlLeft";
+            panelControlLeft.Size = new Size(366, 160);
+            panelControlLeft.TabIndex = 9;
+            // 
             // volumeControl1
             // 
-            volumeControl1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            volumeControl1.Location = new Point(741, 3);
+            volumeControl1.Dock = DockStyle.Right;
+            volumeControl1.Location = new Point(744, 0);
             volumeControl1.Name = "volumeControl1";
-            volumeControl1.Size = new Size(40, 157);
+            volumeControl1.Size = new Size(40, 166);
             volumeControl1.TabIndex = 13;
             volumeControl1.TextVisible = true;
             // 
@@ -210,6 +250,14 @@
             tableLayoutPanel1.Size = new Size(784, 15);
             tableLayoutPanel1.TabIndex = 11;
             // 
+            // paleInfoControl1
+            // 
+            paleInfoControl1.Dock = DockStyle.Fill;
+            paleInfoControl1.Location = new Point(0, 40);
+            paleInfoControl1.Name = "paleInfoControl1";
+            paleInfoControl1.Size = new Size(366, 120);
+            paleInfoControl1.TabIndex = 8;
+            // 
             // MainForm
             // 
             AllowDrop = true;
@@ -228,6 +276,8 @@
             KeyDown += MainForm_KeyDown;
             panelSmallButton.ResumeLayout(false);
             panelControl.ResumeLayout(false);
+            tableLayoutPanelControl.ResumeLayout(false);
+            panelControlLeft.ResumeLayout(false);
             tableLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);
         }
@@ -246,5 +296,9 @@
         private Panel panelControl;
         private TableLayoutPanel tableLayoutPanel1;
         private VolumeControl volumeControl1;
+        private TableLayoutPanel tableLayoutPanelControl;
+        private Wave.WaveControl waveControl1;
+        private Panel panelControlLeft;
+        private PaleInfoControl paleInfoControl1;
     }
 }

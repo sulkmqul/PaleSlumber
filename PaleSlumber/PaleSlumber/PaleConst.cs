@@ -36,6 +36,13 @@ namespace PaleSlumber
         public static readonly int MiniModeControlHeight = 80;
 
         /// <summary>
+        /// 最小モード時のコントロール部左側のpixelサイズ
+        /// </summary>
+        public static readonly int MiniModeControlLeftWidthPixel = 200;
+
+
+
+        /// <summary>
         /// 通常モード 画面サイズ
         /// </summary>
         public static readonly Size NormalModeDefaultSize = new Size(800, 450);
@@ -43,5 +50,10 @@ namespace PaleSlumber
         /// 通常モードコントロール部サイズ
         /// </summary>
         public static readonly int NormalModeControlHeight = 200;
+
+        /// <summary>
+        /// 通常モード時のコントロール部左側のサイズ(%)
+        /// </summary>
+        public static readonly int NormalModeControlLeftWidthPercent = 70;
     }
 }

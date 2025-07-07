@@ -4,10 +4,16 @@
     <Compile Update="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="PaleInfoControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="PlayingProgress.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="VolumeControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Wave\WaveControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
   </ItemGroup>
