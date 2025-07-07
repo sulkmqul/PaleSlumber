@@ -45,6 +45,11 @@
         /// プレイリストの手動順番変更
         /// </summary>
         PlayListOrderManualChanged,
+
+        /// <summary>
+        /// 音量変更
+        /// </summary>
+        VolumeChanged,
     }
 
     /// <summary>

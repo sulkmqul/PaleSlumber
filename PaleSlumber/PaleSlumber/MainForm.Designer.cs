@@ -41,6 +41,7 @@
             playingProgress1 = new PlayingProgress();
             buttonChangePlayerMode = new Button();
             panelControl = new Panel();
+            volumeControl1 = new VolumeControl();
             tableLayoutPanel1 = new TableLayoutPanel();
             panelSmallButton.SuspendLayout();
             panelControl.SuspendLayout();
@@ -173,6 +174,7 @@
             // 
             // panelControl
             // 
+            panelControl.Controls.Add(volumeControl1);
             panelControl.Controls.Add(playingProgress1);
             panelControl.Controls.Add(tableLayoutPanel1);
             panelControl.Controls.Add(panelSmallButton);
@@ -182,6 +184,15 @@
             panelControl.Name = "panelControl";
             panelControl.Size = new Size(784, 200);
             panelControl.TabIndex = 11;
+            // 
+            // volumeControl1
+            // 
+            volumeControl1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            volumeControl1.Location = new Point(741, 3);
+            volumeControl1.Name = "volumeControl1";
+            volumeControl1.Size = new Size(40, 157);
+            volumeControl1.TabIndex = 13;
+            volumeControl1.TextVisible = true;
             // 
             // tableLayoutPanel1
             // 
@@ -234,5 +245,6 @@
         private Button buttonChangePlayerMode;
         private Panel panelControl;
         private TableLayoutPanel tableLayoutPanel1;
+        private VolumeControl volumeControl1;
     }
 }

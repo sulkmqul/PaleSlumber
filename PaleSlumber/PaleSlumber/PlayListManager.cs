@@ -214,11 +214,16 @@ namespace PaleSlumber
                 //最後を選択
                 this.SelectedList.Add(this.PlayList.Last());
                 return;
+            }            
+            if (index < 0)
+            {
+                //最初を選択
+                this.SelectedList.Add(this.PlayList.First());
+                return;
             }
 
             //対象に追加
             this.SelectedList.Add(this.PlayList[index]);
-
         }
 
         /// <summary>
@@ -227,6 +232,42 @@ namespace PaleSlumber
         public void ClearSelect()
         {
             this.SelectedList.Clear();
+        }
+
+        /// <summary>
+        /// 次を選択する、無いときは適切な選択を行う
+        /// </summary>
+        /// <param name="fdata">基準ファイル</param>
+        public void SelectNext(PlayListFileData? fdata)
+        {
+            //プレイリスト内位置の計算
+            int index = this.CalcuPlayListIndex(fdata);
+            if (index < 0)
+            {
+                //無効なら選択を変えない
+                return;
+            }
+            //次を選択
+            index += 1;
+            this.Select(index);
+
+        }
+        /// <summary>
+        /// 前を選択する、無いときは適切な選択を行う
+        /// </summary>
+        /// <param name="fdata">基準ファイル</param>
+        public void SelectPrev(PlayListFileData? fdata)
+        {
+            //プレイリスト内位置の計算
+            int index = this.CalcuPlayListIndex(fdata);
+            if (index < 0)
+            {
+                //無効なら選択を変えない
+                return;
+            }
+            //前を選択
+            index -= 1;
+            this.Select(index);
         }
 
         /// <summary>
@@ -395,6 +436,32 @@ namespace PaleSlumber
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// 対象ファイルのプレイリストのindexを取得する
+        /// </summary>
+        /// <param name="fdata">検索対象</param>
+        /// <returns>対象index マイナス=無効</returns>
+        private int CalcuPlayListIndex(PlayListFileData? fdata)
+        {
+            //基準がないとき
+            if (fdata == null)
+            {
+                return -1;
+            }
+            //playlist内基準位置の検索
+            var nowsel = this.PlayList.Where(x => x.OrderNo == fdata.OrderNo);
+            if (nowsel.Count() <= 0)
+            {
+                //playlist内にないとき
+                return -1;
+            }
+
+            //ここまで来たら存在するので適切なものを選択
+            PlayListFileData fb = nowsel.First();
+            int index = this.PlayList.IndexOf(fb);
+            return index;
         }
     }
 }

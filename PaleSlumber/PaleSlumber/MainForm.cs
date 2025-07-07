@@ -58,7 +58,6 @@ namespace PaleSlumber
             //プレイヤーモード設定
             this.ChangePlayerMode(EPlayerMode.Normal);
 
-
             this.AddRollEventProc();
 
             //応答イベント処理
@@ -66,6 +65,15 @@ namespace PaleSlumber
             {
                 this.RollEventTable.Execute(x);
             });
+
+            //音量の変更
+            this.volumeControl1.VolumeStream.Select(x => this.CalcuVolumeValue(x)).Subscribe(vol =>
+            {
+                this.PublishEvent(EPaleSlumberEvent.VolumeChanged, vol);
+            });
+
+            //初期値の設定
+            this.volumeControl1.Volume = 50;
         }
 
         /// <summary>
@@ -74,9 +82,14 @@ namespace PaleSlumber
         private void AddRollEventProc()
         {
             //Playlistの追加応答
-            this.RollEventTable.AddEvent(EPaleSlumberEvent.PlayListAdd, (x) => this.Grid.DisplayList());
+            this.RollEventTable.AddEvent(EPaleSlumberEvent.PlayListAdd, (x) => { 
+                this.Grid.DisplayList();
+                this.PlayStart();
+            });
             this.RollEventTable.AddEvent(EPaleSlumberEvent.PlayListRemove, (x) => this.Grid.DisplayList());
             this.RollEventTable.AddEvent(EPaleSlumberEvent.PlayListOrderManualChanged, (x) => this.Grid.DisplayList());
+            this.RollEventTable.AddEvent(EPaleSlumberEvent.PlayNext, (x) => this.Grid.DisplayList());
+            this.RollEventTable.AddEvent(EPaleSlumberEvent.PlayPrev, (x) => this.Grid.DisplayList());
 
         }
 
@@ -97,14 +110,15 @@ namespace PaleSlumber
             //画面サイズ制限
             Size[] limitsize = { PaleConst.MiniModeFormSize, new Size(0, 0) };
 
-            bool[] listvisible = { false, true };
+            bool[] modevisible = { false, true };
 
             //値の設定
             this.MaximumSize = limitsize[n];
             this.MinimumSize = limitsize[n];
             this.Size = fsize[n];
             this.panelControl.Height = ch[n];
-            this.listViewPlayList.Visible = listvisible[n];
+            this.listViewPlayList.Visible = modevisible[n];
+            this.volumeControl1.TextVisible = modevisible[n];
         }
 
         /// <summary>
@@ -132,6 +146,31 @@ namespace PaleSlumber
         private void PublishEvent(EPaleSlumberEvent ev, object param)
         {
             this.FData.EventSub.OnNext(new PaleEvent(ev, param));
+        }
+
+        /// <summary>
+        /// 内部利用の音量を計算する
+        /// </summary>
+        /// <returns></returns>
+        private float CalcuVolumeValue(int vol)
+        {
+            float ans = 0;
+
+            ans = (float)vol / 100.0f;
+
+            return ans;
+        }
+
+        /// <summary>
+        /// 再生開始
+        /// </summary>
+        private void PlayStart()
+        {
+            if (this.FData.PlayList.SelectedFile == null)
+            {
+                return;
+            }
+            this.PublishEvent(EPaleSlumberEvent.PlayStart, this.FData.PlayList.SelectedFile);
         }
         //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
         //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
@@ -233,11 +272,7 @@ namespace PaleSlumber
         /// <param name="e"></param>
         private void listViewPlayList_DoubleClick(object sender, EventArgs e)
         {
-            if (this.FData.PlayList.SelectedFile == null)
-            {
-                return;
-            }
-            this.PublishEvent(EPaleSlumberEvent.PlayStart, this.FData.PlayList.SelectedFile);
+            this.PlayStart();
         }
 
         /// <summary>
@@ -259,8 +294,8 @@ namespace PaleSlumber
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void listViewPlayList_SelectedIndexChanged(object sender, EventArgs e)
-        {            
-            
+        {
+
         }
 
         /// <summary>
@@ -296,7 +331,7 @@ namespace PaleSlumber
 
             int index = this.Grid.GetReplaceIndex();
             if (index < 0)
-            {                
+            {
                 return;
             }
             //順番変更
@@ -310,11 +345,7 @@ namespace PaleSlumber
         /// <param name="e"></param>
         private void buttonSmallPlay_Click(object sender, EventArgs e)
         {
-            if (this.FData.PlayList.SelectedFile == null)
-            {
-                return;
-            }
-            this.PublishEvent(EPaleSlumberEvent.PlayStart, this.FData.PlayList.SelectedFile);
+            this.PlayStart();
         }
 
         /// <summary>
@@ -334,7 +365,7 @@ namespace PaleSlumber
         /// <param name="e"></param>
         private void buttonSmallPrev_Click(object sender, EventArgs e)
         {
-
+            this.PublishEvent(EPaleSlumberEvent.PlayPrev);
         }
 
         /// <summary>
@@ -344,7 +375,7 @@ namespace PaleSlumber
         /// <param name="e"></param>
         private void buttonSmallNext_Click(object sender, EventArgs e)
         {
-
+            this.PublishEvent(EPaleSlumberEvent.PlayNext);
         }
 
         /// <summary>
@@ -357,6 +388,11 @@ namespace PaleSlumber
             this.PublishEvent(EPaleSlumberEvent.PlayPause);
         }
 
+        /// <summary>
+        /// listviewアイテム選択の変更時
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void listViewPlayList_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
 

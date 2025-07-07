@@ -58,12 +58,18 @@ namespace PaleSlumber
             this.EventTable.AddEvent(EPaleSlumberEvent.PlayStart, typeof(PlayListFileData), (ev) => this.StartPlay(ev));
             this.EventTable.AddEvent(EPaleSlumberEvent.PlayStop, (ev) => this.StopPlay(ev));
             this.EventTable.AddEvent(EPaleSlumberEvent.PlayPause, (ev) => this.PausePlay(ev));
+            this.EventTable.AddEvent(EPaleSlumberEvent.PlayNext, (ev) => this.PlayNext(ev));
+            this.EventTable.AddEvent(EPaleSlumberEvent.PlayPrev, (ev) => this.PlayPrev(ev));
+
 
             //プレイリスト周り
             this.EventTable.AddEvent(EPaleSlumberEvent.PlayListAdd, typeof(string[]), async (ev) => await this.AddPlayListProc(ev));
             this.EventTable.AddEvent(EPaleSlumberEvent.PlayListSelectedChanged, typeof(PlayListFileData[]), (ev) => this.ChangePlayListSelect(ev));
             this.EventTable.AddEvent(EPaleSlumberEvent.PlayListRemove, typeof(PlayListFileData[]), (ev) => this.RemovePlayList(ev));
             this.EventTable.AddEvent(EPaleSlumberEvent.PlayListOrderManualChanged, typeof(int), (ev) => this.ChangeOrderPlayListManual(ev));
+
+            //音量変更
+            this.EventTable.AddEvent(EPaleSlumberEvent.VolumeChanged, typeof(float), (ev) => this.ChangeVolume(ev));
 
             //関連イベント実行
             this.FData.EventSub.Subscribe(ev =>
@@ -126,6 +132,36 @@ namespace PaleSlumber
         }
 
         /// <summary>
+        /// 次を再生
+        /// </summary>
+        /// <param name="ev"></param>
+        private void PlayNext(PaleEvent ev)
+        {
+            var pf = this.FData.Player.PlayingFile;
+            this.FData.PlayList.SelectNext(pf);
+            if (this.FData.PlayList.SelectedFile != null)
+            {
+                this.FData.Player.StartPlay(this.FData.PlayList.SelectedFile);
+            }
+            this.RollEventSub.OnNext(ev);
+        }
+
+        /// <summary>
+        /// 前を再生
+        /// </summary>
+        /// <param name="ev"></param>
+        private void PlayPrev(PaleEvent ev)
+        {
+            var pf = this.FData.Player.PlayingFile;
+            this.FData.PlayList.SelectPrev(pf);
+            if (this.FData.PlayList.SelectedFile != null)
+            {
+                this.FData.Player.StartPlay(this.FData.PlayList.SelectedFile);
+            }
+            this.RollEventSub.OnNext(ev);
+        }
+
+        /// <summary>
         /// プレイリスト追加
         /// </summary>
         /// <param name="ev"></param>
@@ -183,6 +219,18 @@ namespace PaleSlumber
             }
             this.RollEventSub.OnNext(ev);
         }
+
+        /// <summary>
+        /// 音量の変更
+        /// </summary>
+        /// <param name="ev"></param>
+        private void ChangeVolume(PaleEvent ev)
+        {
+            float vol = (float)ev.EventParam;
+            this.FData.Player.Volume = vol;
+        }
+
+        
     }
 
 

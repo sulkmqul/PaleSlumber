@@ -76,28 +76,38 @@ namespace PaleSlumber
         /// </summary>
         public void DisplayList()
         {
-            System.Diagnostics.Trace.WriteLine("Grid DisplayList");
-
             //描画処理
             this.Grid.Items.Clear();
             var plist = PaleGlobal.Mana.PlayList;
+
+            List<ListViewItem> ilist = new List<ListViewItem>();
             foreach (var data in plist.PlayList)
             {
                 //表示用データ作成
                 var list = this.CreateGridData(data);
-
                 var item = new ListViewItem(list.ToArray());
                 item.Tag = data;
                 item.Selected = plist.CheckSelected(data);
-
-                this.Grid.Items.Add(item);
+                ilist.Add(item);                
             }
 
-            //選択対象を表示させる
-            if (this.Grid.SelectedIndices.Count > 0)
+            try
             {
-                this.Grid.EnsureVisible(this.Grid.SelectedIndices[0]);
+                this.Grid.SuspendLayout();
+                this.Grid.Items.AddRange(ilist.ToArray());
+                //選択対象を表示させる
+                if (this.Grid.SelectedIndices.Count > 0)
+                {
+                    this.Grid.EnsureVisible(this.Grid.SelectedIndices[0]);
+                }
             }
+            finally
+            {
+                this.Grid.ResumeLayout();
+            }
+
+
+            
 
         }
 

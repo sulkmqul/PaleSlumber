@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -25,7 +26,7 @@ namespace PaleSlumber
     internal class PlayingManager : IDisposable
     {
         public PlayingManager()
-        {
+        {            
         }
         #region メンバ変数
         /// <summary>
@@ -38,10 +39,43 @@ namespace PaleSlumber
         public bool IsPause { get; private set; } = false;
 
         /// <summary>
+        /// 音量(0.0～1.0の間であること)
+        /// </summary>
+        private float _Volume = 0;
+        /// <summary>
+        /// 音量(0.0～1.0の間であること)
+        /// </summary>
+        public float Volume
+        {
+            get
+            {
+                return this._Volume;
+            }
+            set
+            {
+                this._Volume = value;
+                this._Volume = Math.Max(this._Volume, 0);
+                this._Volume = Math.Min(this._Volume, 1.0f);
+                if (this.AudioFile != null)
+                {
+                    this.AudioFile.Volume = this._Volume;
+                }
+            }
+        }
+
+        /// <summary>
         /// 再生情報のstream
         /// </summary>
-        public Subject<int> PlayingSub { get; init; } = new Subject<int>();
+        private Subject<PlayingInfo> PlayingSub { get; init; } = new Subject<PlayingInfo>();
 
+        private IObservable<PlayingInfo> PlayingStream
+        {
+            get
+            {
+                return this.PlayingSub;
+            }
+
+        }
 
         /// <summary>
         /// 再生場所
@@ -54,7 +88,7 @@ namespace PaleSlumber
         /// <summary>
         /// 現在の読み込みファイル情報
         /// </summary>
-        private PlayListFileData? PlayingFile = null;
+        public PlayListFileData? PlayingFile { get; private set; } = null;
 
         
         #endregion
@@ -77,8 +111,15 @@ namespace PaleSlumber
         /// </summary>        
         public void StartPlay()
         {
+            if (this.AudioFile == null)
+            {
+                return;
+            }
+
             this.IsPlaying = true;
             this.IsPause = false;
+
+            this.AudioFile.Volume = this.Volume;
 
             //再生開始
             this.OutputEvent?.Play();
