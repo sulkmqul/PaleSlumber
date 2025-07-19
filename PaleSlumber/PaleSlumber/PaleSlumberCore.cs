@@ -60,6 +60,7 @@ namespace PaleSlumber
             this.EventTable.AddEvent(EPaleSlumberEvent.PlayPause, (ev) => this.PausePlay(ev));
             this.EventTable.AddEvent(EPaleSlumberEvent.PlayNext, (ev) => this.PlayNext(ev));
             this.EventTable.AddEvent(EPaleSlumberEvent.PlayPrev, (ev) => this.PlayPrev(ev));
+            this.EventTable.AddEvent(EPaleSlumberEvent.PlayingPositionChanged, typeof(int), (ev) => this.ChangePlayPosition(ev));
 
 
             //プレイリスト周り
@@ -67,9 +68,14 @@ namespace PaleSlumber
             this.EventTable.AddEvent(EPaleSlumberEvent.PlayListSelectedChanged, typeof(PlayListFileData[]), (ev) => this.ChangePlayListSelect(ev));
             this.EventTable.AddEvent(EPaleSlumberEvent.PlayListRemove, typeof(PlayListFileData[]), (ev) => this.RemovePlayList(ev));
             this.EventTable.AddEvent(EPaleSlumberEvent.PlayListOrderManualChanged, typeof(int), (ev) => this.ChangeOrderPlayListManual(ev));
+            
+            this.EventTable.AddEvent(EPaleSlumberEvent.PlayListSortDefault, (ev) => this.SortPlayList(ev));
+            this.EventTable.AddEvent(EPaleSlumberEvent.PlayListSortRandom, (ev) => this.SortPlayList(ev));
+            this.EventTable.AddEvent(EPaleSlumberEvent.PlayListSortTitle, (ev) => this.SortPlayList(ev));
+            this.EventTable.AddEvent(EPaleSlumberEvent.PlayListSortDuration, (ev) => this.SortPlayList(ev));
 
-            //音量変更
-            this.EventTable.AddEvent(EPaleSlumberEvent.VolumeChanged, typeof(float), (ev) => this.ChangeVolume(ev));
+
+            this.EventTable.AddEvent(EPaleSlumberEvent.VolumeChanged, (ev) => this.ChangeVolume(ev));
 
             //関連イベント実行
             this.FData.EventSub.Subscribe(ev =>
@@ -230,7 +236,30 @@ namespace PaleSlumber
             this.FData.Player.Volume = vol;
         }
 
-        
+        /// <summary>
+        /// 再生位置の変更
+        /// </summary>
+        /// <param name="ev"></param>
+        private void ChangePlayPosition(PaleEvent ev)
+        {
+            int pos = (int)ev.EventParam;
+            this.FData.Player.ChangePosition(pos);
+        }
+
+        /// <summary>
+        /// プレイリストの並べ替え
+        /// </summary>
+        /// <param name="ev"></param>
+        private void SortPlayList(PaleEvent ev)
+        {
+            bool f = this.FData.PlayList.SortPlayList(ev.Event);
+            if (f == false)
+            {
+                return;
+            }
+            this.RollEventSub.OnNext(ev);
+
+        }
     }
 
 

@@ -36,7 +36,7 @@
         /// <summary>
         /// プレイリストを初期化
         /// </summary>
-        PlayListInit,   
+        PlayListClear,
         /// <summary>
         /// プレイリストの選択変更
         /// </summary>
@@ -47,9 +47,32 @@
         PlayListOrderManualChanged,
 
         /// <summary>
+        /// プレイリスト並べ替え、デフォルト
+        /// </summary>
+        PlayListSortDefault ,
+        /// <summary>
+        /// プレイリスト並べ替え ランダム
+        /// </summary>
+        PlayListSortRandom,
+        /// <summary>
+        /// プレイリスト並べ替え タイトル名
+        /// </summary>
+        PlayListSortTitle,
+        /// <summary>
+        /// プレイリスト並べ替え 曲長
+        /// </summary>
+        PlayListSortDuration,
+
+        
+
+        /// <summary>
         /// 音量変更
         /// </summary>
         VolumeChanged,
+        /// <summary>
+        /// 再生位置の変更
+        /// </summary>
+        PlayingPositionChanged,
     }
 
     /// <summary>

@@ -7,10 +7,15 @@ using System.Threading.Tasks;
 
 namespace PaleSlumber
 {
+    /// <summary>
+    /// 全体で使うもの
+    /// </summary>
     class PaleGlobal : IDisposable
     {
         private PaleGlobal()
         {
+            //デバッグ用に発生イベントを補足
+            this.EventSub.Subscribe(x => System.Diagnostics.Trace.WriteLine($"-[{x.Event}]-"));
         }
 
         private static PaleGlobal Instance = new PaleGlobal();

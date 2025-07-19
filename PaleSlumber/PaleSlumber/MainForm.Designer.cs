@@ -32,6 +32,15 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             imageListSmallIcon = new ImageList(components);
             listViewPlayList = new ListView();
+            contextMenuStripPaleMenu = new ContextMenuStrip(components);
+            toolStripMenuItemSort = new ToolStripMenuItem();
+            toolStripMenuItemSortDefault = new ToolStripMenuItem();
+            toolStripMenuItemSortTitle = new ToolStripMenuItem();
+            toolStripMenuItemSortRandom = new ToolStripMenuItem();
+            toolStripMenuItemSortDuration = new ToolStripMenuItem();
+            toolStripMenuItemPlayListClear = new ToolStripMenuItem();
+            toolStripMenuItemPlayListSave = new ToolStripMenuItem();
+            toolStripMenuItemPlayListLoad = new ToolStripMenuItem();
             panelSmallButton = new Panel();
             buttonSmallPause = new Button();
             buttonSmallStop = new Button();
@@ -44,9 +53,10 @@
             tableLayoutPanelControl = new TableLayoutPanel();
             waveControl1 = new PaleSlumber.Wave.WaveControl();
             panelControlLeft = new Panel();
+            paleInfoControl1 = new PaleInfoControl();
             volumeControl1 = new VolumeControl();
             tableLayoutPanel1 = new TableLayoutPanel();
-            paleInfoControl1 = new PaleInfoControl();
+            contextMenuStripPaleMenu.SuspendLayout();
             panelSmallButton.SuspendLayout();
             panelControl.SuspendLayout();
             tableLayoutPanelControl.SuspendLayout();
@@ -70,6 +80,7 @@
             // listViewPlayList
             // 
             listViewPlayList.Activation = ItemActivation.OneClick;
+            listViewPlayList.ContextMenuStrip = contextMenuStripPaleMenu;
             listViewPlayList.Dock = DockStyle.Fill;
             listViewPlayList.FullRowSelect = true;
             listViewPlayList.Location = new Point(0, 200);
@@ -86,6 +97,68 @@
             listViewPlayList.MouseMove += listViewPlayList_MouseMove;
             listViewPlayList.MouseUp += listViewPlayList_MouseUp;
             // 
+            // contextMenuStripPaleMenu
+            // 
+            contextMenuStripPaleMenu.Items.AddRange(new ToolStripItem[] { toolStripMenuItemSort, toolStripMenuItemPlayListClear, toolStripMenuItemPlayListSave, toolStripMenuItemPlayListLoad });
+            contextMenuStripPaleMenu.Name = "contextMenuStripPaleMenu";
+            contextMenuStripPaleMenu.Size = new Size(121, 92);
+            // 
+            // toolStripMenuItemSort
+            // 
+            toolStripMenuItemSort.DropDownItems.AddRange(new ToolStripItem[] { toolStripMenuItemSortDefault, toolStripMenuItemSortTitle, toolStripMenuItemSortRandom, toolStripMenuItemSortDuration });
+            toolStripMenuItemSort.Name = "toolStripMenuItemSort";
+            toolStripMenuItemSort.Size = new Size(120, 22);
+            toolStripMenuItemSort.Text = "並べ替え";
+            // 
+            // toolStripMenuItemSortDefault
+            // 
+            toolStripMenuItemSortDefault.Name = "toolStripMenuItemSortDefault";
+            toolStripMenuItemSortDefault.Size = new Size(180, 22);
+            toolStripMenuItemSortDefault.Text = "既定";
+            toolStripMenuItemSortDefault.Click += toolStripMenuItemSortDefault_Click;
+            // 
+            // toolStripMenuItemSortTitle
+            // 
+            toolStripMenuItemSortTitle.Name = "toolStripMenuItemSortTitle";
+            toolStripMenuItemSortTitle.Size = new Size(180, 22);
+            toolStripMenuItemSortTitle.Text = "タイトル";
+            toolStripMenuItemSortTitle.Click += toolStripMenuItemSortTitle_Click;
+            // 
+            // toolStripMenuItemSortRandom
+            // 
+            toolStripMenuItemSortRandom.Name = "toolStripMenuItemSortRandom";
+            toolStripMenuItemSortRandom.Size = new Size(180, 22);
+            toolStripMenuItemSortRandom.Text = "ランダム";
+            toolStripMenuItemSortRandom.Click += toolStripMenuItemSortRandom_Click;
+            // 
+            // toolStripMenuItemSortDuration
+            // 
+            toolStripMenuItemSortDuration.Name = "toolStripMenuItemSortDuration";
+            toolStripMenuItemSortDuration.Size = new Size(180, 22);
+            toolStripMenuItemSortDuration.Text = "曲長";
+            toolStripMenuItemSortDuration.Click += toolStripMenuItemSortDuration_Click;
+            // 
+            // toolStripMenuItemPlayListClear
+            // 
+            toolStripMenuItemPlayListClear.Name = "toolStripMenuItemPlayListClear";
+            toolStripMenuItemPlayListClear.Size = new Size(120, 22);
+            toolStripMenuItemPlayListClear.Text = "クリア";
+            toolStripMenuItemPlayListClear.Click += toolStripMenuItemPlayListClear_Click;
+            // 
+            // toolStripMenuItemPlayListSave
+            // 
+            toolStripMenuItemPlayListSave.Name = "toolStripMenuItemPlayListSave";
+            toolStripMenuItemPlayListSave.Size = new Size(120, 22);
+            toolStripMenuItemPlayListSave.Text = "保存";
+            toolStripMenuItemPlayListSave.Click += toolStripMenuItemPlayListSave_Click;
+            // 
+            // toolStripMenuItemPlayListLoad
+            // 
+            toolStripMenuItemPlayListLoad.Name = "toolStripMenuItemPlayListLoad";
+            toolStripMenuItemPlayListLoad.Size = new Size(120, 22);
+            toolStripMenuItemPlayListLoad.Text = "読み込み";
+            toolStripMenuItemPlayListLoad.Click += toolStripMenuItemPlayListLoad_Click;
+            // 
             // panelSmallButton
             // 
             panelSmallButton.Controls.Add(buttonSmallPause);
@@ -96,7 +169,7 @@
             panelSmallButton.Dock = DockStyle.Top;
             panelSmallButton.Location = new Point(0, 0);
             panelSmallButton.Name = "panelSmallButton";
-            panelSmallButton.Size = new Size(366, 40);
+            panelSmallButton.Size = new Size(366, 50);
             panelSmallButton.TabIndex = 7;
             // 
             // buttonSmallPause
@@ -225,6 +298,14 @@
             panelControlLeft.Size = new Size(366, 160);
             panelControlLeft.TabIndex = 9;
             // 
+            // paleInfoControl1
+            // 
+            paleInfoControl1.Dock = DockStyle.Fill;
+            paleInfoControl1.Location = new Point(0, 50);
+            paleInfoControl1.Name = "paleInfoControl1";
+            paleInfoControl1.Size = new Size(366, 110);
+            paleInfoControl1.TabIndex = 8;
+            // 
             // volumeControl1
             // 
             volumeControl1.Dock = DockStyle.Right;
@@ -250,14 +331,6 @@
             tableLayoutPanel1.Size = new Size(784, 15);
             tableLayoutPanel1.TabIndex = 11;
             // 
-            // paleInfoControl1
-            // 
-            paleInfoControl1.Dock = DockStyle.Fill;
-            paleInfoControl1.Location = new Point(0, 40);
-            paleInfoControl1.Name = "paleInfoControl1";
-            paleInfoControl1.Size = new Size(366, 120);
-            paleInfoControl1.TabIndex = 8;
-            // 
             // MainForm
             // 
             AllowDrop = true;
@@ -266,6 +339,8 @@
             ClientSize = new Size(784, 411);
             Controls.Add(listViewPlayList);
             Controls.Add(panelControl);
+            DoubleBuffered = true;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             KeyPreview = true;
             Name = "MainForm";
             Text = "Pale Slumber";
@@ -274,6 +349,7 @@
             DragDrop += MainForm_DragDrop;
             DragEnter += MainForm_DragEnter;
             KeyDown += MainForm_KeyDown;
+            contextMenuStripPaleMenu.ResumeLayout(false);
             panelSmallButton.ResumeLayout(false);
             panelControl.ResumeLayout(false);
             tableLayoutPanelControl.ResumeLayout(false);
@@ -300,5 +376,14 @@
         private Wave.WaveControl waveControl1;
         private Panel panelControlLeft;
         private PaleInfoControl paleInfoControl1;
+        private ContextMenuStrip contextMenuStripPaleMenu;
+        private ToolStripMenuItem toolStripMenuItemSort;
+        private ToolStripMenuItem toolStripMenuItemSortDefault;
+        private ToolStripMenuItem toolStripMenuItemSortTitle;
+        private ToolStripMenuItem toolStripMenuItemSortRandom;
+        private ToolStripMenuItem toolStripMenuItemPlayListSave;
+        private ToolStripMenuItem toolStripMenuItemPlayListClear;
+        private ToolStripMenuItem toolStripMenuItemSortDuration;
+        private ToolStripMenuItem toolStripMenuItemPlayListLoad;
     }
 }

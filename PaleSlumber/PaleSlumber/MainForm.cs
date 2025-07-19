@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 
@@ -55,6 +56,12 @@ namespace PaleSlumber
             //プレイリストGridの初期化
             this.Grid.Init();
 
+            //情報初期化
+            this.paleInfoControl1.Init();
+
+            //波形表示初期化
+            this.waveControl1.Init();
+
             //プレイヤーモード設定
             this.ChangePlayerMode(EPlayerMode.Normal);
 
@@ -72,6 +79,12 @@ namespace PaleSlumber
                 this.PublishEvent(EPaleSlumberEvent.VolumeChanged, vol);
             });
 
+            //再生中の処理
+            this.FData.Player.PlayingStream.Subscribe(x =>
+            {
+                this.PlayingEventProc(x);
+            });
+
             //初期値の設定
             this.volumeControl1.Volume = 50;
         }
@@ -82,7 +95,8 @@ namespace PaleSlumber
         private void AddRollEventProc()
         {
             //Playlistの追加応答
-            this.RollEventTable.AddEvent(EPaleSlumberEvent.PlayListAdd, (x) => { 
+            this.RollEventTable.AddEvent(EPaleSlumberEvent.PlayListAdd, (x) =>
+            {
                 this.Grid.DisplayList();
                 this.PlayStart();
             });
@@ -90,6 +104,11 @@ namespace PaleSlumber
             this.RollEventTable.AddEvent(EPaleSlumberEvent.PlayListOrderManualChanged, (x) => this.Grid.DisplayList());
             this.RollEventTable.AddEvent(EPaleSlumberEvent.PlayNext, (x) => this.Grid.DisplayList());
             this.RollEventTable.AddEvent(EPaleSlumberEvent.PlayPrev, (x) => this.Grid.DisplayList());
+            this.RollEventTable.AddEvent(EPaleSlumberEvent.PlayListSortDefault, (x) => this.Grid.DisplayList());
+            this.RollEventTable.AddEvent(EPaleSlumberEvent.PlayListSortTitle, (x) => this.Grid.DisplayList());
+            this.RollEventTable.AddEvent(EPaleSlumberEvent.PlayListSortRandom, (x) => this.Grid.DisplayList());
+            this.RollEventTable.AddEvent(EPaleSlumberEvent.PlayListSortDuration, (x) => this.Grid.DisplayList());
+
 
         }
 
@@ -181,6 +200,30 @@ namespace PaleSlumber
                 return;
             }
             this.PublishEvent(EPaleSlumberEvent.PlayStart, this.FData.PlayList.SelectedFile);
+        }
+
+        /// <summary>
+        /// 再生処理
+        /// </summary>
+        /// <param name="pf"></param>
+        private void PlayingEventProc(PlayingInfo pf)
+        {
+            //再生位置の設定
+            this.playingProgress1.ProgressPlaying(pf.TotalTime, pf.NowTime);
+
+            if (pf.Event == EPlayingEvent.Start)
+            {
+                //再生情報初期化
+                this.paleInfoControl1.LoadFile(pf.PlayFile);
+                return;
+            }
+            if (pf.Event == EPlayingEvent.Stop)
+            {
+                this.PublishEvent(EPaleSlumberEvent.PlayNext);
+                return;
+            }
+            //波形処理
+            this.waveControl1.PushWave(pf.WaveBuffer);
         }
         //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
         //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
@@ -404,6 +447,76 @@ namespace PaleSlumber
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void listViewPlayList_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// menu プレイリスト並べ替え 既定
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripMenuItemSortDefault_Click(object sender, EventArgs e)
+        {
+            this.PublishEvent(EPaleSlumberEvent.PlayListSortDefault);
+        }
+
+        /// <summary>
+        /// menu プレイリスト並べ替え タイトル
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripMenuItemSortTitle_Click(object sender, EventArgs e)
+        {
+            this.PublishEvent(EPaleSlumberEvent.PlayListSortTitle);
+        }
+
+        /// <summary>
+        /// menu プレイリスト並べ替え ランダム
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripMenuItemSortRandom_Click(object sender, EventArgs e)
+        {
+            this.PublishEvent(EPaleSlumberEvent.PlayListSortRandom);
+        }
+
+        /// <summary>
+        /// menu プレイリスト並べ替え 曲長
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripMenuItemSortDuration_Click(object sender, EventArgs e)
+        {
+            this.PublishEvent(EPaleSlumberEvent.PlayListSortDuration);
+        }
+
+        /// <summary>
+        /// menu プレイリストクリア
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripMenuItemPlayListClear_Click(object sender, EventArgs e)
+        {
+            this.PublishEvent(EPaleSlumberEvent.PlayListClear);
+        }
+
+        /// <summary>
+        /// menu プレイリスト保存
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripMenuItemPlayListSave_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// menu プレイリスト読み込み
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripMenuItemPlayListLoad_Click(object sender, EventArgs e)
         {
 
         }

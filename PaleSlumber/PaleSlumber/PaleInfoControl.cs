@@ -20,6 +20,29 @@ namespace PaleSlumber
             InitializeComponent();
         }
 
+        /// <summary>
+        /// 初期化
+        /// </summary>
+        public void Init()
+        {
+            Label[] lvec = {
+                this.labelTitle,
+                this.labelPath,                
+            };
+            foreach (var label in lvec)
+            {
+                label.Text = "";
+            }
+        }
+
+        internal void LoadFile(PlayListFileData fdata)
+        {
+            this.labelTitle.Text = fdata.FileName;
+            this.labelPath.Text = fdata.FilePath;
+
+
+        }
+
         private void PaleInfoControl_Load(object sender, EventArgs e)
         {
 

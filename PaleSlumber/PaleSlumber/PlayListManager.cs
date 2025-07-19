@@ -11,7 +11,11 @@ namespace PaleSlumber
     /// 管理ファイル情報
     /// </summary>
     internal class PlayListFileData
-    {   
+    {
+        /// <summary>
+        /// 表示順
+        /// </summary>
+        public int SeqNo { get; protected set; } = 0;
 
         /// <summary>
         /// これのファイル名(拡張子なし)
@@ -36,10 +40,7 @@ namespace PaleSlumber
         /// </summary>
         public string WaveFormatString { get; protected set; } = "";
 
-        /// <summary>
-        /// 表示順
-        /// </summary>
-        public int OrderNo { get; protected set; } = 0;
+        
 
         /// <summary>
         /// 曲のタイトル
@@ -71,7 +72,7 @@ namespace PaleSlumber
             this.Extension = Path.GetExtension(filepath);
 
             //表示順設定
-            this.OrderNo = n;
+            this.SeqNo = n;
 
             //音楽情報の取得
             using (NAudio.Wave.AudioFileReader ar = new NAudio.Wave.AudioFileReader(filepath))
@@ -98,7 +99,7 @@ namespace PaleSlumber
         /// <summary>
         /// 再生リスト情報
         /// </summary>
-        public List<PlayListFileData> PlayList{ get; init; } = new List<PlayListFileData>();
+        public List<PlayListFileData> PlayList{ get; private set; } = new List<PlayListFileData>();
 
         /// <summary>
         /// 表示順のシーケンス
@@ -169,7 +170,7 @@ namespace PaleSlumber
         /// <returns></returns>
         public bool CheckSelected(PlayListFileData fdata)
         {
-            int c = this.SelectedList.Where(x => x.OrderNo == fdata.OrderNo).Count();
+            int c = this.SelectedList.Where(x => x.SeqNo == fdata.SeqNo).Count();
             if (c <= 0)
             {
                 return false;
@@ -321,6 +322,33 @@ namespace PaleSlumber
 
             return true;
         }
+
+        /// <summary>
+        /// プレイリスト並べ替え
+        /// </summary>
+        /// <param name="ev">イベント</param>
+        /// <returns>成功可否</returns>
+        public bool SortPlayList(EPaleSlumberEvent ev)
+        {
+            //並べ替え処理の設定
+            Dictionary<EPaleSlumberEvent, PlayListSort.SortDelegate> dic = new Dictionary<EPaleSlumberEvent, PlayListSort.SortDelegate>();
+            {
+                dic.Add(EPaleSlumberEvent.PlayListSortDefault, PlayListSort.SortDefault);
+                dic.Add(EPaleSlumberEvent.PlayListSortTitle, PlayListSort.SortTitle);
+                dic.Add(EPaleSlumberEvent.PlayListSortRandom, PlayListSort.SortRandom);
+                dic.Add(EPaleSlumberEvent.PlayListSortDuration, PlayListSort.SortDuration);
+            }
+            bool exf = dic.ContainsKey(ev);
+            if (exf == false)
+            {
+                return false; 
+            }
+
+            this.PlayList = dic[ev](this.PlayList);
+
+            return true;
+
+        }
         //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
         //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
         /// <summary>
@@ -451,7 +479,7 @@ namespace PaleSlumber
                 return -1;
             }
             //playlist内基準位置の検索
-            var nowsel = this.PlayList.Where(x => x.OrderNo == fdata.OrderNo);
+            var nowsel = this.PlayList.Where(x => x.SeqNo == fdata.SeqNo);
             if (nowsel.Count() <= 0)
             {
                 //playlist内にないとき

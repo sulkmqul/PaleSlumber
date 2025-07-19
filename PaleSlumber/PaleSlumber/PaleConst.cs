@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 
 namespace PaleSlumber
 {
-    
-
     /// <summary>
     /// プレイヤーモード
     /// </summary>
@@ -55,5 +53,25 @@ namespace PaleSlumber
         /// 通常モード時のコントロール部左側のサイズ(%)
         /// </summary>
         public static readonly int NormalModeControlLeftWidthPercent = 70;
+
+
+        /// <summary>
+        /// 波形バッファの最大長
+        /// </summary>
+        public const int MaxWaveBufferLength = 1024;
+
+        /// <summary>
+        /// 波形描画サイズ
+        /// </summary>
+        public const int MaxWaveRenderingSize = 128;
+
+        /// <summary>
+        /// 波形表示背景色
+        /// </summary>
+        public static readonly Color WaveBackgroundColor = Color.Black;
+        /// <summary>
+        /// 波形色
+        /// </summary>
+        public static readonly Color WaveColor = Color.Azure;
     }
 }

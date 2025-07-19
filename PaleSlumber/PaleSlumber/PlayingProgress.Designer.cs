@@ -39,23 +39,23 @@
             labelTotalTime.AutoSize = true;
             labelTotalTime.Location = new Point(61, 0);
             labelTotalTime.Name = "labelTotalTime";
-            labelTotalTime.Size = new Size(34, 15);
+            labelTotalTime.Size = new Size(49, 15);
             labelTotalTime.TabIndex = 1;
-            labelTotalTime.Text = "99:99";
+            labelTotalTime.Text = "99:99:99";
             // 
             // labelPlayingPosition
             // 
             labelPlayingPosition.AutoSize = true;
             labelPlayingPosition.Location = new Point(3, 0);
             labelPlayingPosition.Name = "labelPlayingPosition";
-            labelPlayingPosition.Size = new Size(34, 15);
+            labelPlayingPosition.Size = new Size(49, 15);
             labelPlayingPosition.TabIndex = 1;
-            labelPlayingPosition.Text = "00:00";
+            labelPlayingPosition.Text = "00:00:00";
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(43, 0);
+            label1.Location = new Point(50, 0);
             label1.Name = "label1";
             label1.Size = new Size(12, 15);
             label1.TabIndex = 1;
@@ -64,11 +64,13 @@
             // hScrollBarPlayingPosition
             // 
             hScrollBarPlayingPosition.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            hScrollBarPlayingPosition.Location = new Point(98, 0);
+            hScrollBarPlayingPosition.Location = new Point(113, 0);
             hScrollBarPlayingPosition.Maximum = 300;
             hScrollBarPlayingPosition.Name = "hScrollBarPlayingPosition";
-            hScrollBarPlayingPosition.Size = new Size(288, 15);
+            hScrollBarPlayingPosition.Size = new Size(273, 15);
             hScrollBarPlayingPosition.TabIndex = 5;
+            hScrollBarPlayingPosition.ValueChanged += hScrollBarPlayingPosition_ValueChanged;
+            hScrollBarPlayingPosition.MouseCaptureChanged += hScrollBarPlayingPosition_MouseCaptureChanged;
             // 
             // PlayingProgress
             // 

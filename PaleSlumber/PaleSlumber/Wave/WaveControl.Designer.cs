@@ -47,8 +47,10 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(pictureBoxWave);
+            DoubleBuffered = true;
             Name = "WaveControl";
             Load += WaveControl_Load;
+            Resize += WaveControl_Resize;
             ((System.ComponentModel.ISupportInitialize)pictureBoxWave).EndInit();
             ResumeLayout(false);
         }
