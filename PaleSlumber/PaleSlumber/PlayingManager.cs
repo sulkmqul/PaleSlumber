@@ -257,18 +257,39 @@ namespace PaleSlumber
                 return;
             }
 
-            
-            System.Diagnostics.Trace.WriteLine($"onPlayStopped state={this.OutputEvent.PlaybackState} pos={this.AudioFile.Position} len={this.AudioFile.Length}");
-            System.Diagnostics.Trace.WriteLine($"current_time={this.AudioFile.CurrentTime} total_time={this.AudioFile.TotalTime}");
-
             //最後まで行ったら再生終了を通知
-            //System.Diagnostics.Trace.WriteLine($"Stop   {this.AudioFile.Length}/{this.AudioFile.Position}");
-            if (this.AudioFile.Position >= this.AudioFile.Length)
+            bool ckf = this.CheckPlayEnd();
+            if (ckf == true)
             {
                 this.PlayingSub.OnNext(new PlayingInfo(EPlayingEvent.Stop, this.PlayingFile));
             }
             
             
+        }
+
+        /// <summary>
+        /// 現在のファイルの再生が終了したか否かを判断する
+        /// </summary>
+        /// <returns>true=再生終了</returns>
+        private bool CheckPlayEnd()
+        {
+            //this.AudioFile.Position >= this.AudioFile.Length比較、現在時間と再生時間とを
+            //比較して超えていたら終了と判断するロジックは
+            //たまに絶妙な僅差で成立しないときがある。
+            //手動で停止した場合、再生時間を0にしているおかげでここでも0になる公算が高い。
+            //よって、半分を超えていたら次と判断する
+            if (this.AudioFile == null)
+            {
+                return false;
+            }
+
+            long hlen = (long)((double)this.AudioFile.Length * 0.5);
+            if (this.AudioFile.Position > hlen)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>

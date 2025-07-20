@@ -74,6 +74,8 @@ namespace PaleSlumber
             this.EventTable.AddEvent(EPaleSlumberEvent.PlayListSortTitle, (ev) => this.SortPlayList(ev));
             this.EventTable.AddEvent(EPaleSlumberEvent.PlayListSortDuration, (ev) => this.SortPlayList(ev));
 
+            this.EventTable.AddEvent(EPaleSlumberEvent.PlayListClear, (ev) => this.ClearPlayList(ev));
+
 
             this.EventTable.AddEvent(EPaleSlumberEvent.VolumeChanged, (ev) => this.ChangeVolume(ev));
 
@@ -147,7 +149,11 @@ namespace PaleSlumber
             this.FData.PlayList.SelectNext(pf);
             if (this.FData.PlayList.SelectedFile != null)
             {
-                this.FData.Player.StartPlay(this.FData.PlayList.SelectedFile);
+                //同じファイルでないなら次を再生する
+                if (pf?.SeqNo != this.FData.PlayList.SelectedFile.SeqNo)
+                {
+                    this.FData.Player.StartPlay(this.FData.PlayList.SelectedFile);
+                }
             }
             this.RollEventSub.OnNext(ev);
         }
@@ -257,6 +263,17 @@ namespace PaleSlumber
             {
                 return;
             }
+            this.RollEventSub.OnNext(ev);
+
+        }
+
+        /// <summary>
+        /// プレイリストのクリア
+        /// </summary>
+        /// <param name="ev"></param>
+        private void ClearPlayList(PaleEvent ev)
+        {
+            this.FData.PlayList.Init();
             this.RollEventSub.OnNext(ev);
 
         }

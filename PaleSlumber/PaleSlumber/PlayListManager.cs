@@ -58,6 +58,17 @@ namespace PaleSlumber
         [Obsolete("not implemented yet")]
         public string AlbumName { get; protected set; } = "";
 
+        /// <summary>
+        /// 表示名
+        /// </summary>
+        public string DisplayText
+        {
+            get
+            {
+                return this.FileName;
+            }
+        }
+
 
         /// <summary>
         /// 読み込み

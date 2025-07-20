@@ -7,7 +7,7 @@
     <Compile Update="PaleInfoControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="PlayingProgress.cs">
+    <Compile Update="Progress\PlayingProgress.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="VolumeControl.cs">

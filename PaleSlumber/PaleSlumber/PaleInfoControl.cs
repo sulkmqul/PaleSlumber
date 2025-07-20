@@ -37,7 +37,7 @@ namespace PaleSlumber
 
         internal void LoadFile(PlayListFileData fdata)
         {
-            this.labelTitle.Text = fdata.FileName;
+            this.labelTitle.Text = fdata.DisplayText;
             this.labelPath.Text = fdata.FilePath;
 
 

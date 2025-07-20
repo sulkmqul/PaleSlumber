@@ -108,6 +108,7 @@ namespace PaleSlumber
             this.RollEventTable.AddEvent(EPaleSlumberEvent.PlayListSortTitle, (x) => this.Grid.DisplayList());
             this.RollEventTable.AddEvent(EPaleSlumberEvent.PlayListSortRandom, (x) => this.Grid.DisplayList());
             this.RollEventTable.AddEvent(EPaleSlumberEvent.PlayListSortDuration, (x) => this.Grid.DisplayList());
+            this.RollEventTable.AddEvent(EPaleSlumberEvent.PlayListClear, (x) => this.Grid.DisplayList());
 
 
         }
@@ -215,6 +216,7 @@ namespace PaleSlumber
             {
                 //再生情報初期化
                 this.paleInfoControl1.LoadFile(pf.PlayFile);
+                this.ChangeFormTitle(pf.PlayFile);
                 return;
             }
             if (pf.Event == EPlayingEvent.Stop)
@@ -224,6 +226,21 @@ namespace PaleSlumber
             }
             //波形処理
             this.waveControl1.PushWave(pf.WaveBuffer);
+        }
+
+
+        /// <summary>
+        /// 画面タイトルの変更
+        /// </summary>
+        /// <param name="pf">表示タイトル null=なし</param>
+        private void ChangeFormTitle(PlayListFileData? pf)
+        {
+            this.Text = PaleConst.ApplicationName;
+            if (pf == null)
+            {
+                return;
+            }
+            this.Text = $"{pf.DisplayText} - {PaleConst.ApplicationName}";
         }
         //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
         //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//

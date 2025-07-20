@@ -27,7 +27,7 @@ namespace PaleSlumber
         /// <returns></returns>
         public static List<PlayListFileData> SortTitle(List<PlayListFileData> plist)
         {
-            return plist.OrderBy(x => x.FileName).ToList();
+            return plist.OrderBy(x => x.DisplayText).ToList();
         }
 
         /// <summary>

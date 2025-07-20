@@ -187,7 +187,7 @@ namespace PaleSlumber
             List<string> anslist = new List<string>();
 
             //タイトル
-            anslist.Add(data.FileName);
+            anslist.Add(data.DisplayText);
             //長さ
             anslist.Add($"{data.TotalTime.Minutes:D2}:{data.TotalTime.Seconds:D2}");
             //ファイルパス
