@@ -28,70 +28,64 @@
         /// </summary>
         private void InitializeComponent()
         {
-            labelTotalTime = new Label();
-            labelPlayingPosition = new Label();
-            label1 = new Label();
-            hScrollBarPlayingPosition = new HScrollBar();
+            labelProgress = new Label();
+            panel1 = new Panel();
+            pictureBoxProgressBar = new PictureBox();
+            panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBoxProgressBar).BeginInit();
             SuspendLayout();
             // 
-            // labelTotalTime
+            // labelProgress
             // 
-            labelTotalTime.AutoSize = true;
-            labelTotalTime.Location = new Point(61, 0);
-            labelTotalTime.Name = "labelTotalTime";
-            labelTotalTime.Size = new Size(49, 15);
-            labelTotalTime.TabIndex = 1;
-            labelTotalTime.Text = "99:99:99";
+            labelProgress.Dock = DockStyle.Left;
+            labelProgress.Location = new Point(0, 0);
+            labelProgress.Name = "labelProgress";
+            labelProgress.Size = new Size(105, 15);
+            labelProgress.TabIndex = 0;
+            labelProgress.Text = "00:00:00 / 99:99:99";
+            labelProgress.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // labelPlayingPosition
+            // panel1
             // 
-            labelPlayingPosition.AutoSize = true;
-            labelPlayingPosition.Location = new Point(3, 0);
-            labelPlayingPosition.Name = "labelPlayingPosition";
-            labelPlayingPosition.Size = new Size(49, 15);
-            labelPlayingPosition.TabIndex = 1;
-            labelPlayingPosition.Text = "00:00:00";
+            panel1.Controls.Add(pictureBoxProgressBar);
+            panel1.Dock = DockStyle.Fill;
+            panel1.Location = new Point(105, 0);
+            panel1.Margin = new Padding(0);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(281, 15);
+            panel1.TabIndex = 1;
             // 
-            // label1
+            // pictureBoxProgressBar
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(50, 0);
-            label1.Name = "label1";
-            label1.Size = new Size(12, 15);
-            label1.TabIndex = 1;
-            label1.Text = "/";
-            // 
-            // hScrollBarPlayingPosition
-            // 
-            hScrollBarPlayingPosition.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            hScrollBarPlayingPosition.Location = new Point(113, 0);
-            hScrollBarPlayingPosition.Maximum = 300;
-            hScrollBarPlayingPosition.Name = "hScrollBarPlayingPosition";
-            hScrollBarPlayingPosition.Size = new Size(273, 15);
-            hScrollBarPlayingPosition.TabIndex = 5;
-            hScrollBarPlayingPosition.ValueChanged += hScrollBarPlayingPosition_ValueChanged;
-            hScrollBarPlayingPosition.MouseCaptureChanged += hScrollBarPlayingPosition_MouseCaptureChanged;
+            pictureBoxProgressBar.Dock = DockStyle.Fill;
+            pictureBoxProgressBar.Location = new Point(0, 0);
+            pictureBoxProgressBar.Name = "pictureBoxProgressBar";
+            pictureBoxProgressBar.Size = new Size(281, 15);
+            pictureBoxProgressBar.TabIndex = 2;
+            pictureBoxProgressBar.TabStop = false;
+            pictureBoxProgressBar.Paint += pictureBoxProgressBar_Paint;
+            pictureBoxProgressBar.MouseDown += pictureBoxProgressBar_MouseDown;
+            pictureBoxProgressBar.MouseMove += pictureBoxProgressBar_MouseMove;
+            pictureBoxProgressBar.MouseUp += pictureBoxProgressBar_MouseUp;
             // 
             // PlayingProgress
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(label1);
-            Controls.Add(labelTotalTime);
-            Controls.Add(labelPlayingPosition);
-            Controls.Add(hScrollBarPlayingPosition);
+            Controls.Add(panel1);
+            Controls.Add(labelProgress);
             Name = "PlayingProgress";
             Size = new Size(386, 15);
             Load += PlayingProgress_Load;
+            panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)pictureBoxProgressBar).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
 
-        private Label labelTotalTime;
-        private Label labelPlayingPosition;
-        private Label label1;
-        private HScrollBar hScrollBarPlayingPosition;
+        private Label labelProgress;
+        private Panel panel1;
+        private PictureBox pictureBoxProgressBar;
     }
 }

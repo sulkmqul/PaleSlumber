@@ -348,17 +348,39 @@ namespace PaleSlumber
                 dic.Add(EPaleSlumberEvent.PlayListSortTitle, PlayListSort.SortTitle);
                 dic.Add(EPaleSlumberEvent.PlayListSortRandom, PlayListSort.SortRandom);
                 dic.Add(EPaleSlumberEvent.PlayListSortDuration, PlayListSort.SortDuration);
-            }
+            }            
+            //確認
             bool exf = dic.ContainsKey(ev);
             if (exf == false)
             {
                 return false; 
             }
 
+            //並べ替え
             this.PlayList = dic[ev](this.PlayList);
 
             return true;
 
+        }
+
+        /// <summary>
+        /// プレイリスト保存
+        /// </summary>
+        /// <param name="filepath">保存ファイルパス</param>
+        public void SavePlayList(string filepath)
+        {
+            PlayListFile.Save(filepath, this.PlayList);
+        }
+
+        /// <summary>
+        /// プレイリスト読み込み
+        /// </summary>
+        /// <param name="filepath">読み込みファイルパス</param>
+        public void LoadPlayList(string filepath)
+        {
+            var plist = PlayListFile.Load(filepath);
+            this.PlayList.Clear();
+            this.PlayList.AddRange(plist);
         }
         //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
         //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//

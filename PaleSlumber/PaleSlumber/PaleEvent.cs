@@ -63,6 +63,15 @@
         /// </summary>
         PlayListSortDuration,
 
+        /// <summary>
+        /// プレイリスト保存
+        /// </summary>
+        PlayListSaveFile,
+        /// <summary>
+        /// プレイリスト読み込み
+        /// </summary>
+        PlayListLoadFile,
+
         
 
         /// <summary>

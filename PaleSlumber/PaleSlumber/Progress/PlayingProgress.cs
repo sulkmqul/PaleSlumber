@@ -43,16 +43,16 @@ namespace PaleSlumber
             {
                 this.Invoke(new Action(() =>
                 {
-                    this.hScrollBarPlayingPosition.Maximum = (int)total.TotalSeconds;
+                    //this.hScrollBarPlayingPosition.Maximum = (int)total.TotalSeconds;
 
-                    int ctime = (int)current.TotalSeconds;
-                    if (ctime > this.hScrollBarPlayingPosition.Maximum) {
-                        ctime = this.hScrollBarPlayingPosition.Maximum;
-                    }
-                    this.hScrollBarPlayingPosition.Value = ctime;
+                    //int ctime = (int)current.TotalSeconds;
+                    //if (ctime > this.hScrollBarPlayingPosition.Maximum) {
+                    //    ctime = this.hScrollBarPlayingPosition.Maximum;
+                    //}
+                    //this.hScrollBarPlayingPosition.Value = ctime;
                 }));
             }
-            
+
             this.AutoSetting = false;
 
         }
@@ -62,12 +62,12 @@ namespace PaleSlumber
         /// </summary>
         private void DisplayTime()
         {
-            TimeSpan total = new TimeSpan(0, 0, this.hScrollBarPlayingPosition.Maximum);
-            TimeSpan curt = new TimeSpan(0, 0, this.hScrollBarPlayingPosition.Value);
+            //TimeSpan total = new TimeSpan(0, 0, this.hScrollBarPlayingPosition.Maximum);
+            //TimeSpan curt = new TimeSpan(0, 0, this.hScrollBarPlayingPosition.Value);
 
 
-            this.labelTotalTime.Text = $"{total.Hours:D2}:{total.Minutes:D2}:{total.Seconds:D2}";
-            this.labelPlayingPosition.Text = $"{curt.Hours:D2}:{curt.Minutes:D2}:{curt.Seconds:D2}";
+            //this.labelTotalTime.Text = $"{total.Hours:D2}:{total.Minutes:D2}:{total.Seconds:D2}";
+            //this.labelPlayingPosition.Text = $"{curt.Hours:D2}:{curt.Minutes:D2}:{curt.Seconds:D2}";
         }
 
         //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
@@ -108,8 +108,28 @@ namespace PaleSlumber
             if (this.ManualMovingFlag == false)
             {
                 //再生位置の変更
-                PaleGlobal.Mana.EventSub.OnNext(new PaleEvent(EPaleSlumberEvent.PlayingPositionChanged, this.hScrollBarPlayingPosition.Value));
+                //PaleGlobal.Mana.EventSub.OnNext(new PaleEvent(EPaleSlumberEvent.PlayingPositionChanged, this.hScrollBarPlayingPosition.Value));
             }
+        }
+
+        private void pictureBoxProgressBar_Paint(object sender, PaintEventArgs e)
+        {
+            e.Graphics.Clear(Color.Red);
+        }
+
+        private void pictureBoxProgressBar_MouseDown(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void pictureBoxProgressBar_MouseMove(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void pictureBoxProgressBar_MouseUp(object sender, MouseEventArgs e)
+        {
+
         }
     }
 }

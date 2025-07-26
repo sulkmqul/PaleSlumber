@@ -113,28 +113,28 @@
             // toolStripMenuItemSortDefault
             // 
             toolStripMenuItemSortDefault.Name = "toolStripMenuItemSortDefault";
-            toolStripMenuItemSortDefault.Size = new Size(180, 22);
+            toolStripMenuItemSortDefault.Size = new Size(110, 22);
             toolStripMenuItemSortDefault.Text = "既定";
             toolStripMenuItemSortDefault.Click += toolStripMenuItemSortDefault_Click;
             // 
             // toolStripMenuItemSortTitle
             // 
             toolStripMenuItemSortTitle.Name = "toolStripMenuItemSortTitle";
-            toolStripMenuItemSortTitle.Size = new Size(180, 22);
+            toolStripMenuItemSortTitle.Size = new Size(110, 22);
             toolStripMenuItemSortTitle.Text = "タイトル";
             toolStripMenuItemSortTitle.Click += toolStripMenuItemSortTitle_Click;
             // 
             // toolStripMenuItemSortRandom
             // 
             toolStripMenuItemSortRandom.Name = "toolStripMenuItemSortRandom";
-            toolStripMenuItemSortRandom.Size = new Size(180, 22);
+            toolStripMenuItemSortRandom.Size = new Size(110, 22);
             toolStripMenuItemSortRandom.Text = "ランダム";
             toolStripMenuItemSortRandom.Click += toolStripMenuItemSortRandom_Click;
             // 
             // toolStripMenuItemSortDuration
             // 
             toolStripMenuItemSortDuration.Name = "toolStripMenuItemSortDuration";
-            toolStripMenuItemSortDuration.Size = new Size(180, 22);
+            toolStripMenuItemSortDuration.Size = new Size(110, 22);
             toolStripMenuItemSortDuration.Text = "曲長";
             toolStripMenuItemSortDuration.Click += toolStripMenuItemSortDuration_Click;
             // 
@@ -237,6 +237,7 @@
             playingProgress1.Dock = DockStyle.Bottom;
             playingProgress1.Location = new Point(0, 166);
             playingProgress1.Name = "playingProgress1";
+            playingProgress1.Padding = new Padding(0, 0, 3, 0);
             playingProgress1.Size = new Size(784, 19);
             playingProgress1.TabIndex = 9;
             // 

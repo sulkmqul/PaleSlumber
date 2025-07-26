@@ -45,6 +45,7 @@ namespace PaleSlumber.Wave
             {
                 //System.Diagnostics.Trace.WriteLine($"TIMER={x}");
                 this.Invoke(new Action(() => this.Refresh()));
+                
             });
         }
 

@@ -73,6 +73,8 @@ namespace PaleSlumber
             this.EventTable.AddEvent(EPaleSlumberEvent.PlayListSortRandom, (ev) => this.SortPlayList(ev));
             this.EventTable.AddEvent(EPaleSlumberEvent.PlayListSortTitle, (ev) => this.SortPlayList(ev));
             this.EventTable.AddEvent(EPaleSlumberEvent.PlayListSortDuration, (ev) => this.SortPlayList(ev));
+            this.EventTable.AddEvent(EPaleSlumberEvent.PlayListSaveFile, typeof(string), (ev) => this.SavePlayList(ev));
+            this.EventTable.AddEvent(EPaleSlumberEvent.PlayListLoadFile, typeof(string), (ev) => this.LoadPlayList(ev));
 
             this.EventTable.AddEvent(EPaleSlumberEvent.PlayListClear, (ev) => this.ClearPlayList(ev));
 
@@ -276,6 +278,33 @@ namespace PaleSlumber
             this.FData.PlayList.Init();
             this.RollEventSub.OnNext(ev);
 
+        }
+
+        /// <summary>
+        /// プレイリスト保存
+        /// </summary>
+        /// <param name="ev"></param>
+        private void SavePlayList(PaleEvent ev)
+        {
+            try
+            {
+                this.FData.PlayList.SavePlayList(ev.ParamString);
+                this.RollEventSub.OnNext(new PaleEvent(EPaleSlumberEvent.PlayListSaveFile, true));
+            }
+            catch (Exception ex)
+            {
+                this.RollEventSub.OnNext(new PaleEvent(EPaleSlumberEvent.PlayListSaveFile, false));
+            }
+        }
+
+        /// <summary>
+        /// プレイリスト読み込み
+        /// </summary>
+        /// <param name="ev"></param>
+        private void LoadPlayList(PaleEvent ev)
+        {
+            this.FData.PlayList.LoadPlayList(ev.ParamString);
+            this.RollEventSub.OnNext(ev);
         }
     }
 

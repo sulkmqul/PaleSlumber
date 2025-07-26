@@ -109,6 +109,17 @@ namespace PaleSlumber
             this.RollEventTable.AddEvent(EPaleSlumberEvent.PlayListSortRandom, (x) => this.Grid.DisplayList());
             this.RollEventTable.AddEvent(EPaleSlumberEvent.PlayListSortDuration, (x) => this.Grid.DisplayList());
             this.RollEventTable.AddEvent(EPaleSlumberEvent.PlayListClear, (x) => this.Grid.DisplayList());
+            this.RollEventTable.AddEvent(EPaleSlumberEvent.PlayListLoadFile, (x) => this.Grid.DisplayList());
+
+            this.RollEventTable.AddEvent(EPaleSlumberEvent.PlayListSaveFile, (x) =>
+            {
+                bool f = (bool)x.EventParam;
+                if (f == false)
+                {
+                    this.ShowError("書き込み失敗");
+                }
+            });
+
 
 
         }
@@ -525,7 +536,15 @@ namespace PaleSlumber
         /// <param name="e"></param>
         private void toolStripMenuItemPlayListSave_Click(object sender, EventArgs e)
         {
-
+            SaveFileDialog diag = new SaveFileDialog();
+            diag.Filter = "PaleSlumber PlayList File(*.ppf)|*.ppf|全てのファイル(*.*)|*.*";
+            var dret = diag.ShowDialog(this);
+            if (dret != DialogResult.OK)
+            {
+                return;
+            }
+            string filepath = diag.FileName;
+            this.PublishEvent(EPaleSlumberEvent.PlayListSaveFile, filepath);
         }
 
         /// <summary>
@@ -535,7 +554,16 @@ namespace PaleSlumber
         /// <param name="e"></param>
         private void toolStripMenuItemPlayListLoad_Click(object sender, EventArgs e)
         {
-
+            OpenFileDialog diag = new OpenFileDialog();
+            diag.Filter = "PaleSlumber PlayList File(*.ppf)|*.ppf|全てのファイル(*.*)|*.*";
+            diag.Multiselect = false;
+            var dret = diag.ShowDialog(this);
+            if (dret != DialogResult.OK)
+            {
+                return;
+            }
+            string filepath = diag.FileName;
+            this.PublishEvent(EPaleSlumberEvent.PlayListLoadFile, filepath);
         }
     }
 }
