@@ -7,6 +7,8 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>icon.ico</ApplicationIcon>
+    <Title>Pale Slumber</Title>
+    <Copyright>copyright 2025 sul</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
