@@ -213,6 +213,12 @@ namespace PaleSlumber
                 return;
             }
             this.AudioFile.CurrentTime = new TimeSpan(0, 0, sec);
+
+            //再生していないなら再生
+            if (this.IsPlaying == false)
+            {
+                this.OutputEvent?.Play();
+            }
         }
 
         /// <summary>

@@ -220,9 +220,6 @@ namespace PaleSlumber
         /// <param name="pf"></param>
         private void PlayingEventProc(PlayingInfo pf)
         {
-            //再生位置の設定
-            this.playingProgress1.ProgressPlaying(pf.TotalTime, pf.NowTime);
-
             if (pf.Event == EPlayingEvent.Start)
             {
                 //再生情報初期化
@@ -232,9 +229,13 @@ namespace PaleSlumber
             }
             if (pf.Event == EPlayingEvent.Stop)
             {
+                //再生が終了したら次を再生
                 this.PublishEvent(EPaleSlumberEvent.PlayNext);
                 return;
             }
+            //再生位置の設定
+            this.playingProgress1.ProgressPlaying(pf.TotalTime, pf.NowTime);
+
             //波形処理
             this.waveControl1.PushWave(pf.WaveBuffer);
         }

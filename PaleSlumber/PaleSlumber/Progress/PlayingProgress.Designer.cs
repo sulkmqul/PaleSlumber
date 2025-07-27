@@ -65,6 +65,8 @@
             pictureBoxProgressBar.TabStop = false;
             pictureBoxProgressBar.Paint += pictureBoxProgressBar_Paint;
             pictureBoxProgressBar.MouseDown += pictureBoxProgressBar_MouseDown;
+            pictureBoxProgressBar.MouseEnter += pictureBoxProgressBar_MouseEnter;
+            pictureBoxProgressBar.MouseLeave += pictureBoxProgressBar_MouseLeave;
             pictureBoxProgressBar.MouseMove += pictureBoxProgressBar_MouseMove;
             pictureBoxProgressBar.MouseUp += pictureBoxProgressBar_MouseUp;
             // 

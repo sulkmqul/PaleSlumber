@@ -1,33 +1,69 @@
-﻿using System;
+﻿using PaleSlumber.Progress;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PaleSlumber
 {
+    /// <summary>
+    /// 進捗Bar
+    /// </summary>
     public partial class PlayingProgress : UserControl
     {
         public PlayingProgress()
         {
             InitializeComponent();
 
+
+
         }
 
         /// <summary>
-        /// 設定中の処理
+        /// 自動設定中 true=自動設定中
         /// </summary>
-        private bool AutoSetting = false;
-
+        private bool AutoSettingFlag = false;
 
         /// <summary>
-        /// 手動設定可否
+        /// 手動設定中 true=手動設定中
         /// </summary>
-        private bool ManualMovingFlag = false;
+        private bool ManualSettingFlag = false;
+
+        /// <summary>
+        /// マウス情報
+        /// </summary>
+        private MouseInfo MInfo = new MouseInfo();
+
+        /// <summary>
+        /// 描画管理
+        /// </summary>
+        private ProgressPainter Painter = new ProgressPainter();
+
+        /// <summary>
+        /// 演出用のAlpha物
+        /// </summary>
+        private IDisposable? AlphaRx = null;
+
+        /// <summary>
+        /// Barを掴んか否かのフラグ true=掴んでいる
+        /// </summary>
+        private bool BarGrabFlag = false;
+
+        /// <summary>
+        /// 全体時間
+        /// </summary>
+        double CurrentTotalSeconds = 0.0;
+        /// <summary>
+        /// 現在時間
+        /// </summary>
+        double CurrentSeconds = 0.0;
 
         /// <summary>
         /// 設定
@@ -36,24 +72,25 @@ namespace PaleSlumber
         /// <param name="current"></param>
         public void ProgressPlaying(TimeSpan total, TimeSpan current)
         {
-            this.AutoSetting = true;
+            this.AutoSettingFlag = true;
 
             //手動でデータを掴んでいる場合は更新しない
-            if (this.ManualMovingFlag == false)
+            if (this.ManualSettingFlag == false)
             {
+                //値の保存
+                this.CurrentTotalSeconds = total.TotalSeconds;
+                this.CurrentSeconds = current.TotalSeconds;
+
                 this.Invoke(new Action(() =>
                 {
-                    //this.hScrollBarPlayingPosition.Maximum = (int)total.TotalSeconds;
-
-                    //int ctime = (int)current.TotalSeconds;
-                    //if (ctime > this.hScrollBarPlayingPosition.Maximum) {
-                    //    ctime = this.hScrollBarPlayingPosition.Maximum;
-                    //}
-                    //this.hScrollBarPlayingPosition.Value = ctime;
+                    float parcent = (float)current.TotalMilliseconds / (float)total.TotalMilliseconds;
+                    this.Painter.ProgressParcent = parcent;
+                    this.DisplayTime();
+                    this.Refresh();
                 }));
             }
 
-            this.AutoSetting = false;
+            this.AutoSettingFlag = false;
 
         }
 
@@ -62,14 +99,52 @@ namespace PaleSlumber
         /// </summary>
         private void DisplayTime()
         {
-            //TimeSpan total = new TimeSpan(0, 0, this.hScrollBarPlayingPosition.Maximum);
-            //TimeSpan curt = new TimeSpan(0, 0, this.hScrollBarPlayingPosition.Value);
+            TimeSpan total = TimeSpan.FromSeconds(this.CurrentTotalSeconds);
+            TimeSpan curt = TimeSpan.FromSeconds(this.CurrentSeconds);
 
+            
+            string ts = $"{total.Hours:D2}:{total.Minutes:D2}:{total.Seconds:D2}";
+            string cs = $"{curt.Hours:D2}:{curt.Minutes:D2}:{curt.Seconds:D2}";
+            this.labelProgress.Text = $"{cs} / {ts}";
+        }
+        /// <summary>
+        /// マニュアル設定
+        /// </summary>
+        private void ProgressManual()
+        {
+            //マウス位置の進捗率を算出
+            float pc = this.MInfo.NowPos.X / this.Painter.AviableArea.Width;
+            pc = Math.Max(0.0f, pc);
+            pc = Math.Min(1.0f, pc);
 
-            //this.labelTotalTime.Text = $"{total.Hours:D2}:{total.Minutes:D2}:{total.Seconds:D2}";
-            //this.labelPlayingPosition.Text = $"{curt.Hours:D2}:{curt.Minutes:D2}:{curt.Seconds:D2}";
+            //値の設定
+            this.CurrentSeconds = this.CurrentTotalSeconds * pc;
+            this.Painter.ProgressParcent = pc;            
+
+            this.DisplayTime();
         }
 
+        /// <summary>
+        /// Stepによる移動
+        /// </summary>
+        private void ProgressStep()
+        {
+            double offset = 2;
+            if (this.MInfo.DownPos.X < this.Painter.BarCenter.X)
+            {
+                offset = -offset;
+            }
+
+            //適当にオフセット
+            this.CurrentSeconds += offset;
+            if (this.CurrentSeconds < 0)
+            {
+                this.CurrentSeconds = 0;
+            }
+
+            //通知
+            PaleGlobal.Mana.EventSub.OnNext(new PaleEvent(EPaleSlumberEvent.PlayingPositionChanged, (int)this.CurrentSeconds));
+        }
         //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
         //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
         //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
@@ -84,52 +159,127 @@ namespace PaleSlumber
 
         }
 
+
         /// <summary>
-        /// スクロールバーの値が変更された時
+        /// 描画されるとき
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void hScrollBarPlayingPosition_ValueChanged(object sender, EventArgs e)
-        {
-            //System.Diagnostics.Trace.WriteLine($"position_changed={this.AutoSetting}");
-
-            //表示更新
-            this.DisplayTime();
-        }
-
-        /// <summary>
-        /// スクロールバーをマウスが掴んだ時、離したとき
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void hScrollBarPlayingPosition_MouseCaptureChanged(object sender, EventArgs e)
-        {
-            this.ManualMovingFlag = !this.ManualMovingFlag;
-            if (this.ManualMovingFlag == false)
-            {
-                //再生位置の変更
-                //PaleGlobal.Mana.EventSub.OnNext(new PaleEvent(EPaleSlumberEvent.PlayingPositionChanged, this.hScrollBarPlayingPosition.Value));
-            }
-        }
-
         private void pictureBoxProgressBar_Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.Clear(Color.Red);
+            this.Painter.Render(e.Graphics, this.pictureBoxProgressBar);
         }
 
+        /// <summary>
+        /// マウスが押された時
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void pictureBoxProgressBar_MouseDown(object sender, MouseEventArgs e)
         {
+            this.ManualSettingFlag = true;
+            this.MInfo.DownMouse(e);
 
+            this.BarGrabFlag = false;
+            bool gf = this.Painter.BarArea.Contains(this.MInfo.DownPos);
+            if (gf == true)
+            {
+                this.BarGrabFlag = true;
+                return;
+            }
+            this.ProgressStep();
         }
 
+        /// <summary>
+        /// マウスが動いたとき
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void pictureBoxProgressBar_MouseMove(object sender, MouseEventArgs e)
         {
+            this.MInfo.MoveMouse(e);
+            if (this.BarGrabFlag == true)
+            {
+                this.ProgressManual();
+            }
+            //マウスオーバー可否の判定
+            if (this.MInfo.DownFlag == false)
+            {
+                this.Painter.MouseOver = this.Painter.BarArea.Contains(this.MInfo.NowPos);
+            }
+            this.Refresh();
 
         }
 
+        /// <summary>
+        /// マウスが離された時
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void pictureBoxProgressBar_MouseUp(object sender, MouseEventArgs e)
         {
+            this.MInfo.UpMouse(e);
 
+            if (this.BarGrabFlag == true)
+            {
+                PaleGlobal.Mana.EventSub.OnNext(new PaleEvent(EPaleSlumberEvent.PlayingPositionChanged, (int)this.CurrentSeconds));
+            }
+            
+
+            this.ManualSettingFlag = false;
+            this.BarGrabFlag = false;
+            
+        }
+
+        /// <summary>
+        /// マウスが入った時
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void pictureBoxProgressBar_MouseEnter(object sender, EventArgs e)
+        {
+            //alphaの変更を一定時間行ってちょっとリッチに魅せる演出
+            this.AlphaRx?.Dispose();
+            this.Painter.LargeAlpha = 0;
+            this.AlphaRx = Observable.Interval(TimeSpan.FromMilliseconds(30)).
+                TakeUntil(Observable.Timer(TimeSpan.FromMilliseconds(200))).
+                Subscribe(x =>
+                {
+                    this.Painter.LargeAlpha += 40;
+                    if (this.Painter.LargeAlpha > 255)
+                    {
+                        this.Painter.LargeAlpha = 255;
+                    }
+                    this.Invoke(() => this.Refresh());
+                }
+                );
+
+
+
+        }
+
+        /// <summary>
+        /// マウスが出たとき
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void pictureBoxProgressBar_MouseLeave(object sender, EventArgs e)
+        {
+            //alphaの変更を一定時間行ってちょっとリッチに魅せる演出
+            this.AlphaRx?.Dispose();
+            this.AlphaRx = Observable.Interval(TimeSpan.FromMilliseconds(30)).
+                TakeUntil(Observable.Timer(TimeSpan.FromMilliseconds(200))).
+                Subscribe(x =>
+                {
+                    this.Painter.LargeAlpha -= 40;
+                    if (this.Painter.LargeAlpha < 0)
+                    {
+                        this.Painter.LargeAlpha = 0;
+                    }
+                    this.Invoke(() => this.Refresh());
+                }
+                );
+            this.Painter.MouseOver = false;
         }
     }
 }
