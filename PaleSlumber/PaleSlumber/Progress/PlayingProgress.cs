@@ -129,7 +129,7 @@ namespace PaleSlumber
         /// </summary>
         private void ProgressStep()
         {
-            double offset = 2;
+            double offset = PaleConst.StepProgressSeconds;
             if (this.MInfo.DownPos.X < this.Painter.BarCenter.X)
             {
                 offset = -offset;

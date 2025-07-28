@@ -58,12 +58,17 @@ namespace PaleSlumber
         /// <summary>
         /// 波形バッファの最大長
         /// </summary>
-        public const int MaxWaveBufferLength = 1024;
+        public const int MaxWaveBufferLength = 512;
 
         /// <summary>
         /// 波形描画サイズ
         /// </summary>
         public const int MaxWaveRenderingSize = 128;
+
+        /// <summary>
+        /// クリック時何秒移動させるの値
+        /// </summary>
+        public const int StepProgressSeconds = 5;
 
         /// <summary>
         /// 波形表示背景色

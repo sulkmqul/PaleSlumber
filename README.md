@@ -1,8 +1,8 @@
 # Pale Slumber
 自分用の音楽再生Player。
 
-再生リストのランダム並び替え機能が欲しすぎて
-代替を探したのですがいまいちピンと来ず。。。。  
+再生リストのランダム並び替え機能が欲しすぎて  
+いろいろアプリを探したのですがいまいちピンと来ず。。。。  
 
 
 ある時C# + NAudioだと結構楽に作れそうなことがわかったので、  
@@ -40,6 +40,8 @@ Launch PaleSlumber.exe.
 
 ## Author 
 sulkmqul  
+[Blog](http://blog.livedoor.jp/serialpath/)
+
 
 ## アイコン素材
 [icon-rainbow.com](https://icon-rainbow.com/)

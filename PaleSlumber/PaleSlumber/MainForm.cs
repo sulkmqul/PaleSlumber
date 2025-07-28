@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PaleSlumber
 {
@@ -87,6 +88,16 @@ namespace PaleSlumber
 
             //‰Šú’l‚Ìİ’è
             this.volumeControl1.Volume = 50;
+
+
+            //ˆø”w’è‚Ì‚à‚Ì‚ğ“Ç‚İ‚Ş
+            string[] args = Environment.GetCommandLineArgs();
+            if (args.Length <= 1)
+            {
+                return;
+            }
+            this.PublishEvent(EPaleSlumberEvent.PlayListAdd, new string[]{ args[1]});
+
         }
 
         /// <summary>
