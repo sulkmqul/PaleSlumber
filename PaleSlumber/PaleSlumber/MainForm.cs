@@ -96,7 +96,7 @@ namespace PaleSlumber
             {
                 return;
             }
-            this.PublishEvent(EPaleSlumberEvent.PlayListAdd, new string[]{ args[1]});
+            this.PublishEvent(EPaleSlumberEvent.PlayListAdd, new string[] { args[1] });
 
         }
 
@@ -576,6 +576,17 @@ namespace PaleSlumber
             }
             string filepath = diag.FileName;
             this.PublishEvent(EPaleSlumberEvent.PlayListLoadFile, filepath);
+        }
+
+        /// <summary>
+        /// 対象フォルダを開く
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonOpenExplorer_Click(object sender, EventArgs e)
+        {
+            string filepath = this.FData.PlayList.SelectedFile?.FilePath ?? "";
+            this.PublishEvent(EPaleSlumberEvent.ExplorerOpen, filepath);
         }
     }
 }

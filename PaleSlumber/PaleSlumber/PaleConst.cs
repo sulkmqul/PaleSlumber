@@ -25,6 +25,11 @@ namespace PaleSlumber
         public const string ApplicationName = "Pale Slumber";
 
         /// <summary>
+        /// 起動フォルダアプリ名
+        /// </summary>
+        public const string ExplorerExePath = "EXPLORER.exe";
+
+        /// <summary>
         /// 最小モード画面サイズ
         /// </summary>
         public static readonly Size MiniModeFormSize = new Size(400, 125);
@@ -36,7 +41,7 @@ namespace PaleSlumber
         /// <summary>
         /// 最小モード時のコントロール部左側のpixelサイズ
         /// </summary>
-        public static readonly int MiniModeControlLeftWidthPixel = 200;
+        public static readonly int MiniModeControlLeftWidthPixel = 270;
 
 
 

@@ -9,3 +9,4 @@ play.png		・・・再生
 prev.png		・・・前の曲
 rollback.png	・・・巻き戻し
 stop.png		・・・停止
+folder.png	・・・フォルダ表示

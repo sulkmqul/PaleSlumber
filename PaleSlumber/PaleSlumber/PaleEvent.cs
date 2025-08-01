@@ -82,6 +82,11 @@
         /// 再生位置の変更
         /// </summary>
         PlayingPositionChanged,
+
+        /// <summary>
+        /// 現在再生中の楽曲があるフォルダを開く
+        /// </summary>
+        ExplorerOpen,
     }
 
     /// <summary>

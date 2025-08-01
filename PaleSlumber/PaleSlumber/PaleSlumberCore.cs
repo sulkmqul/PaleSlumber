@@ -81,6 +81,8 @@ namespace PaleSlumber
 
             this.EventTable.AddEvent(EPaleSlumberEvent.VolumeChanged, (ev) => this.ChangeVolume(ev));
 
+            this.EventTable.AddEvent(EPaleSlumberEvent.ExplorerOpen, typeof(string), (ev) => this.OpenExplorer(ev));
+
             //関連イベント実行
             this.FData.EventSub.Subscribe(ev =>
             {
@@ -305,6 +307,27 @@ namespace PaleSlumber
         {
             this.FData.PlayList.LoadPlayList(ev.ParamString);
             this.RollEventSub.OnNext(ev);
+        }
+
+
+        /// <summary>
+        /// フォルダを開く
+        /// </summary>
+        /// <param name="ev"></param>
+        private void OpenExplorer(PaleEvent ev)
+        {
+            string filepath = ev.ParamString;
+            bool fret = File.Exists(filepath);
+            if (fret == false)
+            {
+                //存在しないならデフォルト位置を開く
+                System.Diagnostics.Process.Start(PaleConst.ExplorerExePath);
+                return;
+            }
+            //対象ファイルを開く
+            System.Diagnostics.Process.Start(PaleConst.ExplorerExePath, $"/select, \"{filepath}\"");
+
+
         }
     }
 

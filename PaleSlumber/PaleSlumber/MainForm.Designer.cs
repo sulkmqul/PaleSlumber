@@ -42,6 +42,7 @@
             toolStripMenuItemPlayListSave = new ToolStripMenuItem();
             toolStripMenuItemPlayListLoad = new ToolStripMenuItem();
             panelSmallButton = new Panel();
+            buttonOpenExplorer = new Button();
             buttonSmallPause = new Button();
             buttonSmallStop = new Button();
             buttonSmallNext = new Button();
@@ -76,6 +77,7 @@
             imageListSmallIcon.Images.SetKeyName(4, "prev.png");
             imageListSmallIcon.Images.SetKeyName(5, "rollback.png");
             imageListSmallIcon.Images.SetKeyName(6, "stop.png");
+            imageListSmallIcon.Images.SetKeyName(7, "folder.png");
             // 
             // listViewPlayList
             // 
@@ -161,6 +163,7 @@
             // 
             // panelSmallButton
             // 
+            panelSmallButton.Controls.Add(buttonOpenExplorer);
             panelSmallButton.Controls.Add(buttonSmallPause);
             panelSmallButton.Controls.Add(buttonSmallStop);
             panelSmallButton.Controls.Add(buttonSmallNext);
@@ -171,6 +174,18 @@
             panelSmallButton.Name = "panelSmallButton";
             panelSmallButton.Size = new Size(366, 50);
             panelSmallButton.TabIndex = 7;
+            // 
+            // buttonOpenExplorer
+            // 
+            buttonOpenExplorer.ImageIndex = 7;
+            buttonOpenExplorer.ImageList = imageListSmallIcon;
+            buttonOpenExplorer.Location = new Point(217, 6);
+            buttonOpenExplorer.Margin = new Padding(0);
+            buttonOpenExplorer.Name = "buttonOpenExplorer";
+            buttonOpenExplorer.Size = new Size(32, 32);
+            buttonOpenExplorer.TabIndex = 4;
+            buttonOpenExplorer.UseVisualStyleBackColor = false;
+            buttonOpenExplorer.Click += buttonOpenExplorer_Click;
             // 
             // buttonSmallPause
             // 
@@ -386,5 +401,6 @@
         private ToolStripMenuItem toolStripMenuItemPlayListClear;
         private ToolStripMenuItem toolStripMenuItemSortDuration;
         private ToolStripMenuItem toolStripMenuItemPlayListLoad;
+        private Button buttonOpenExplorer;
     }
 }
