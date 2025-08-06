@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -8,6 +9,13 @@ using System.Xml.Linq;
 
 namespace PaleSlumber
 {
+    class PlayListItem
+    {        
+        public int Seq { get; set; } = 0;
+        public string FilePath { get; set; } = "";
+    }
+
+
     /// <summary>
     /// プレイリストファイル
     /// </summary>
@@ -38,20 +46,16 @@ namespace PaleSlumber
                     {
                         throw new Exception("not playlist files");
                     }
-                    //全要素読み込み
-                    var itemvec = root.Elements(ITEM_NAME);
-                    foreach (var item in itemvec)
+
+                    //読み込み
+                    List<PlayListItem> plist = PlayListFile.LoadElement(root);
+                    
+                    anslist = plist.Select(x =>
                     {
-                        int seq = Convert.ToInt32(item.Attribute(ATTR_SEQ)?.Value ?? "0");
-                        string path = item.Value;
-
-                        //読み込みを行う
-                        PlayListFileData ans = new PlayListFileData();
-                        ans.Load(path, seq);
-                        anslist.Add(ans);                     
-                        
-                    }
-
+                        PlayListFileData data = new PlayListFileData();
+                        data.Load(x.FilePath, x.Seq);
+                        return data;
+                    }).ToList();
                 }
 
                 return anslist;
@@ -71,17 +75,13 @@ namespace PaleSlumber
         {
             try
             {
+                //保存データ作成
+                List<PlayListItem> ilist =
+                    plist.Select(x => new PlayListItem() { FilePath = x.FilePath, Seq = x.SeqNo }).ToList();
+
                 using (FileStream fp = new FileStream(filepath, FileMode.Create, FileAccess.Write))
                 {
-                    XElement rele = new XElement(ROOT_NAME);
-                    foreach (var pdata in plist)
-                    {
-                        var ele = new XElement(ITEM_NAME);
-                        ele.SetAttributeValue(ATTR_SEQ, pdata.SeqNo);
-                        ele.Value = pdata.FilePath;
-                        rele.Add(ele);
-                    }
-
+                    XElement rele = PlayListFile.SaveElement(ROOT_NAME, ilist);
                     rele.Save(fp);
                 }
             }
@@ -89,6 +89,53 @@ namespace PaleSlumber
             {                
                 throw;
             }
+        }
+
+        /// <summary>
+        /// Element読み込み
+        /// </summary>
+        /// <param name="rname">ルート名</param>
+        /// <param name="root">エレメント</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static List<PlayListItem> LoadElement(XElement root)
+        {
+            List<PlayListItem> anslist = new List<PlayListItem>();
+
+            //全要素読み込み
+            var itemvec = root.Elements(ITEM_NAME);
+            foreach (var item in itemvec)
+            {
+                int seq = Convert.ToInt32(item.Attribute(ATTR_SEQ)?.Value ?? "0");
+                string path = item.Value;
+
+                //読み込みを行う
+                PlayListItem ans = new PlayListItem(){ Seq = seq, FilePath = path };                
+                anslist.Add(ans);
+
+            }
+
+            return anslist;
+        }
+
+        /// <summary>
+        /// 保存Element作成
+        /// </summary>
+        /// <param name="rname">作成するroot名</param>
+        /// <param name="plist">作成データ</param>
+        /// <returns></returns>
+        public static XElement SaveElement(string rname, List<PlayListItem> plist)
+        {
+            XElement ans = new XElement(rname);
+            foreach (var pdata in plist)
+            {
+                var ele = new XElement(ITEM_NAME);
+                ele.SetAttributeValue(ATTR_SEQ, pdata.Seq);
+                ele.Value = pdata.FilePath;
+                ans.Add(ele);
+            }
+
+            return ans;
         }
     }
 }

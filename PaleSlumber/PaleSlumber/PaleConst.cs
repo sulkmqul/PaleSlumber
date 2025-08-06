@@ -3,6 +3,7 @@ using System.CodeDom;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -28,6 +29,16 @@ namespace PaleSlumber
         /// 起動フォルダアプリ名
         /// </summary>
         public const string ExplorerExePath = "EXPLORER.exe";
+
+        /// <summary>
+        /// アプリケーションフォルダ固有名
+        /// </summary>
+        public const string ApplicationDirectoryName = "PaleSlumber";
+
+        /// <summary>
+        /// プレイリストファイルの拡張子(.ppf)
+        /// </summary>
+        public const string PaleSumberPlayListFileExtension = ".ppf";
 
         /// <summary>
         /// 最小モード画面サイズ

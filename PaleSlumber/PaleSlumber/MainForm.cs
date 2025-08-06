@@ -549,7 +549,7 @@ namespace PaleSlumber
         private void toolStripMenuItemPlayListSave_Click(object sender, EventArgs e)
         {
             SaveFileDialog diag = new SaveFileDialog();
-            diag.Filter = "PaleSlumber PlayList File(*.ppf)|*.ppf|全てのファイル(*.*)|*.*";
+            diag.Filter = $"PaleSlumber PlayList File(*{PaleConst.PaleSumberPlayListFileExtension})|*{PaleConst.PaleSumberPlayListFileExtension}|全てのファイル(*.*)|*.*";
             var dret = diag.ShowDialog(this);
             if (dret != DialogResult.OK)
             {

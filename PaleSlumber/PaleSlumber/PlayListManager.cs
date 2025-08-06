@@ -13,7 +13,7 @@ namespace PaleSlumber
     internal class PlayListFileData
     {
         /// <summary>
-        /// 表示順
+        /// 識別ID(表示順)
         /// </summary>
         public int SeqNo { get; protected set; } = 0;
 
