@@ -594,5 +594,15 @@ namespace PaleSlumber
             string filepath = this.FData.PlayList.SelectedFile?.FilePath ?? "";
             this.PublishEvent(EPaleSlumberEvent.ExplorerOpen, filepath);
         }
+
+        /// <summary>
+        /// プレイリスト並べ替えボタンが押された時
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonPlayListShuffle_Click(object sender, EventArgs e)
+        {
+            this.PublishEvent(EPaleSlumberEvent.PlayListSortRandom);
+        }
     }
 }

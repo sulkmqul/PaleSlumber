@@ -57,6 +57,7 @@
             paleInfoControl1 = new PaleInfoControl();
             volumeControl1 = new VolumeControl();
             tableLayoutPanel1 = new TableLayoutPanel();
+            buttonPlayListShuffle = new Button();
             contextMenuStripPaleMenu.SuspendLayout();
             panelSmallButton.SuspendLayout();
             panelControl.SuspendLayout();
@@ -78,6 +79,7 @@
             imageListSmallIcon.Images.SetKeyName(5, "rollback.png");
             imageListSmallIcon.Images.SetKeyName(6, "stop.png");
             imageListSmallIcon.Images.SetKeyName(7, "folder.png");
+            imageListSmallIcon.Images.SetKeyName(8, "shuffle.png");
             // 
             // listViewPlayList
             // 
@@ -163,6 +165,7 @@
             // 
             // panelSmallButton
             // 
+            panelSmallButton.Controls.Add(buttonPlayListShuffle);
             panelSmallButton.Controls.Add(buttonOpenExplorer);
             panelSmallButton.Controls.Add(buttonSmallPause);
             panelSmallButton.Controls.Add(buttonSmallStop);
@@ -347,6 +350,18 @@
             tableLayoutPanel1.Size = new Size(784, 15);
             tableLayoutPanel1.TabIndex = 11;
             // 
+            // buttonPlayListShuffle
+            // 
+            buttonPlayListShuffle.ImageIndex = 8;
+            buttonPlayListShuffle.ImageList = imageListSmallIcon;
+            buttonPlayListShuffle.Location = new Point(274, 6);
+            buttonPlayListShuffle.Margin = new Padding(0);
+            buttonPlayListShuffle.Name = "buttonPlayListShuffle";
+            buttonPlayListShuffle.Size = new Size(32, 32);
+            buttonPlayListShuffle.TabIndex = 5;
+            buttonPlayListShuffle.UseVisualStyleBackColor = false;
+            buttonPlayListShuffle.Click += buttonPlayListShuffle_Click;
+            // 
             // MainForm
             // 
             AllowDrop = true;
@@ -402,5 +417,6 @@
         private ToolStripMenuItem toolStripMenuItemSortDuration;
         private ToolStripMenuItem toolStripMenuItemPlayListLoad;
         private Button buttonOpenExplorer;
+        private Button buttonPlayListShuffle;
     }
 }
