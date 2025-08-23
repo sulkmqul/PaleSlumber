@@ -66,6 +66,7 @@ namespace PaleSlumber
             //プレイヤーモード設定
             this.ChangePlayerMode(EPlayerMode.Normal);
 
+            //イベント応答初期化
             this.AddRollEventProc();
 
             //応答イベント処理
@@ -89,6 +90,9 @@ namespace PaleSlumber
             //初期値の設定
             this.volumeControl1.Volume = 50;
 
+            //初期化
+            this.PublishEvent(EPaleSlumberEvent.Initialize);
+
 
             //引数指定のものを読み込む
             string[] args = Environment.GetCommandLineArgs();
@@ -111,6 +115,7 @@ namespace PaleSlumber
                 this.Grid.DisplayList();
                 this.PlayStart();
             });
+            this.RollEventTable.AddEvent(EPaleSlumberEvent.Initialize, (x) => this.Grid.DisplayList());
             this.RollEventTable.AddEvent(EPaleSlumberEvent.PlayListRemove, (x) => this.Grid.DisplayList());
             this.RollEventTable.AddEvent(EPaleSlumberEvent.PlayListOrderManualChanged, (x) => this.Grid.DisplayList());
             this.RollEventTable.AddEvent(EPaleSlumberEvent.PlayNext, (x) => this.Grid.DisplayList());
@@ -158,9 +163,6 @@ namespace PaleSlumber
             int[] tablecontrolwidth = { PaleConst.MiniModeControlLeftWidthPixel, PaleConst.NormalModeControlLeftWidthPercent };
             //コントロール部左側のサイズ情報
             SizeType[] tabletype = { SizeType.Absolute, SizeType.Percent };
-
-
-
 
             //値の設定
             this.MaximumSize = limitsize[n];
@@ -287,6 +289,10 @@ namespace PaleSlumber
         /// <param name="e"></param>
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
+            //システムファイル保存
+            PaleGlobal.Mana.SaveSystemConfig();
+
+            //後始末
             PaleGlobal.Mana.Dispose();
             this.Core.Dispose();
         }

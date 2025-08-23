@@ -56,7 +56,52 @@ namespace PaleSlumber
         {
             this.Player.Dispose();
         }
+
+        /// <summary>
+        /// システムファイルの保存
+        /// </summary>
+        public void SaveSystemConfig()
+        {
+            //保存データの作成
+            PaleSystemConfigData sdata = new PaleSystemConfigData();
+            sdata.CurrentSeq = this.Player.PlayingFile?.SeqNo ?? 0;
+            sdata.PlayListItemList = this.PlayList.PlayList.Select(x => new PlayListItem() { Seq = x.SeqNo, FilePath = x.FilePath }).ToList();
+
+            PaleSlumberSystemConfig conf = new PaleSlumberSystemConfig();
+            conf.Save(sdata);
+        }
+
+        /// <summary>
+        /// システムファイルの読み込み
+        /// </summary>
+        public void LoadSystemConfig()
+        {
+            try
+            {
+                PaleSlumberSystemConfig conf = new PaleSlumberSystemConfig();
+
+                //システムファイル読み込み
+                PaleSystemConfigData data = conf.Load();
+
+                //プレイリスト読み込み
+                this.PlayList.LoadPlayList(data.PlayListItemList);
+
+                //選択の復元
+                this.PlayList.SelectSeq(data.CurrentSeq);
+
+                //再生命令
+                //if (this.PlayList.SelectedFile != null)
+                //{
+                //    this.EventSub.OnNext(new PaleEvent(EPaleSlumberEvent.PlayStart, this.PlayList.SelectedFile));
+                //}
+            }
+            catch
+            {
+                //システムファイルは読めなくても問題ないので放置する。
+            }
+        }
     }
+
 
 
 

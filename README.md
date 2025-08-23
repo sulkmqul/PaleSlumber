@@ -30,6 +30,15 @@ Launch PaleSlumber.exe.
 * Right-click on the grid to display the menu.
 * Clicking the center button will minimize the window.
 
+## Uninstall
+PaleSlumberフォルダごと削除します。  
+```C:/Users/[ユーザー名]/AppData/Roaming/PaleSlumber```にシステム設定ファイルができるので気になるなら削除します。
+
+Remove the PaleSlumber directory.  
+PaleSlumber.exe creates system files in ```C:/Users/[user name]/AppData/Roaming/PaleSlumber```  
+if you want to delete it, remove it directory manulary.
+
+
 ## Build
 * C#
 * Visual Studio 2022

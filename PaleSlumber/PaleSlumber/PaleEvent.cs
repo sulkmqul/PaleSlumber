@@ -6,6 +6,11 @@
     enum EPaleSlumberEvent
     {
         /// <summary>
+        /// 初期化イベント
+        /// </summary>
+        Initialize,
+
+        /// <summary>
         /// 再生開始
         /// </summary>
         PlayStart,

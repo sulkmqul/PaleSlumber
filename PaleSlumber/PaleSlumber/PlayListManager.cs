@@ -237,6 +237,21 @@ namespace PaleSlumber
             //対象に追加
             this.SelectedList.Add(this.PlayList[index]);
         }
+        /// <summary>
+        /// 対象データの選択
+        /// </summary>
+        /// <param name="seq"></param>
+        public void SelectSeq(int seq)
+        {
+            var f = this.PlayList.Where(x => x.SeqNo == seq);
+            if (f.Count() <= 0)
+            {
+                return;
+            }
+            var data = f.First();
+            this.Select(data);
+        }
+
 
         /// <summary>
         /// 選択のクリア
@@ -379,8 +394,25 @@ namespace PaleSlumber
         public void LoadPlayList(string filepath)
         {
             var plist = PlayListFile.Load(filepath);
-            this.PlayList.Clear();
+            //this.PlayList.Clear();
             this.PlayList.AddRange(plist);
+        }
+
+        /// <summary>
+        /// プレイリスト読み込み
+        /// </summary>
+        /// <param name="plist"></param>
+        public void LoadPlayList(List<PlayListItem> plist)
+        {
+            this.PlayList.Clear();
+            var pflist = plist.Select(x =>
+            {
+                PlayListFileData ans = new PlayListFileData();
+                ans.Load(x.FilePath, x.Seq);
+                return ans;
+            }).ToList();
+            
+            this.PlayList.AddRange(pflist);
         }
         //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
         //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
@@ -391,26 +423,39 @@ namespace PaleSlumber
         /// <returns>読み込めたもの一覧</returns>
         private async Task<List<PlayListFileData>> LoadPlayList(List<string> pathlist)
         {
-            List<Task<PlayListFileData?>> tlist = new List<Task<PlayListFileData?>>();
+            List<Task<List<PlayListFileData>>> tlist = new List<Task<List<PlayListFileData>>>();
 
             //全データの概要の読み込み
             foreach (string path in pathlist)
             {
-                //コピーを取っておく
                 int n = this.Seq;
-                var t = Task<PlayListFileData?>.Run(() =>
+                var t = Task<List<PlayListFileData>>.Run(() =>
                 {
                     try
-                    {
+                    {                        
+                        try
+                        {
+                            //プレイリストファイルの確認をする
+                            bool cf = PlayListFile.CheckPlayListFile(path);
+                            if (cf == true)
+                            {
+                                List<PlayListFileData> plist = PlayListFile.Load(path);
+                                return plist;
+                            }
+                        }
+                        catch
+                        {
+                            //プレイリスト出ないなら次の策
+                        }
+
+                        //通常のファイルとして判断する
                         PlayListFileData data = new PlayListFileData();
-
                         data.Load(path, n);
-
-                        return data;
+                        return new List<PlayListFileData>(){ data };
                     }
                     catch
                     {
-                        return null;
+                        return new List<PlayListFileData>();
                     }
 
                 });
@@ -427,12 +472,16 @@ namespace PaleSlumber
                 return new List<PlayListFileData>();
             }
 
-            //null除外
-            List<PlayListFileData> rlist = loaddata.Where(x => x != null).Select(x => x!).ToList();
-            rlist.ForEach(x => this.PlayList.Add(x));
+            //読み込んだものを変換
+            List<PlayListFileData> anslist = new List<PlayListFileData>();
+            foreach (var item in loaddata)
+            {
+                item?.ForEach( x => anslist.Add(x));
+            }
 
-
-            return rlist;
+            //読み込ませる
+            anslist.ForEach(x => this.PlayList.Add(x));
+            return anslist;
 
         }
 

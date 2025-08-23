@@ -9,6 +9,8 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <Title>Pale Slumber</Title>
     <Copyright>copyright 2025 sul</Copyright>
+    <AssemblyVersion></AssemblyVersion>
+    <FileVersion></FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

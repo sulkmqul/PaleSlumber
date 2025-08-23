@@ -54,6 +54,8 @@ namespace PaleSlumber
             this.FData.PlayList.Init();
 
             //イベントテーブルの作成
+            this.EventTable.AddEvent(EPaleSlumberEvent.Initialize, (ev) => this.Initialize(ev));
+
             //再生周り
             this.EventTable.AddEvent(EPaleSlumberEvent.PlayStart, typeof(PlayListFileData), (ev) => this.StartPlay(ev));
             this.EventTable.AddEvent(EPaleSlumberEvent.PlayStop, (ev) => this.StopPlay(ev));
@@ -101,6 +103,16 @@ namespace PaleSlumber
         //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
         //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
         //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//
+        /// <summary>
+        /// 初期化
+        /// </summary>
+        /// <param name="ev"></param>
+        private void Initialize(PaleEvent ev)
+        {
+            PaleGlobal.Mana.LoadSystemConfig();
+            this.RollEventSub.OnNext(ev);
+        }
+
 
         /// <summary>
         /// 再生開始
@@ -186,6 +198,7 @@ namespace PaleSlumber
             //読み込み
             string[] vec = ev.ParamStringArray;
             await this.FData.PlayList.Load(vec);
+            
 
             //終わったら完了処理
             this.RollEventSub.OnNext(ev);

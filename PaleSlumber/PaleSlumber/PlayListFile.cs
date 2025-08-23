@@ -28,6 +28,22 @@ namespace PaleSlumber
         private const string ATTR_SEQ = "seq";
 
         /// <summary>
+        /// プレイリストかの確認
+        /// </summary>
+        /// <param name="fpath">確認ファイルパス</param>
+        /// <returns>true=プレイリストファイルである</returns>
+        public static bool CheckPlayListFile(string fpath)
+        {
+            string ext = Path.GetExtension(fpath);
+            if (ext == PaleConst.PaleSumberPlayListFileExtension)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// ファイル読み込み
         /// </summary>
         /// <param name="filepath"></param>
@@ -65,6 +81,8 @@ namespace PaleSlumber
                 throw;
             }
         }
+
+        
 
         /// <summary>
         /// ファイル保存
