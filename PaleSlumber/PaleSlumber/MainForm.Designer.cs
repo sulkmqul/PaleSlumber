@@ -42,6 +42,7 @@
             toolStripMenuItemPlayListSave = new ToolStripMenuItem();
             toolStripMenuItemPlayListLoad = new ToolStripMenuItem();
             panelSmallButton = new Panel();
+            buttonPlayListShuffle = new Button();
             buttonOpenExplorer = new Button();
             buttonSmallPause = new Button();
             buttonSmallStop = new Button();
@@ -57,7 +58,7 @@
             paleInfoControl1 = new PaleInfoControl();
             volumeControl1 = new VolumeControl();
             tableLayoutPanel1 = new TableLayoutPanel();
-            buttonPlayListShuffle = new Button();
+            buttonPlayListCear = new Button();
             contextMenuStripPaleMenu.SuspendLayout();
             panelSmallButton.SuspendLayout();
             panelControl.SuspendLayout();
@@ -80,6 +81,7 @@
             imageListSmallIcon.Images.SetKeyName(6, "stop.png");
             imageListSmallIcon.Images.SetKeyName(7, "folder.png");
             imageListSmallIcon.Images.SetKeyName(8, "shuffle.png");
+            imageListSmallIcon.Images.SetKeyName(9, "clear.png");
             // 
             // listViewPlayList
             // 
@@ -165,6 +167,7 @@
             // 
             // panelSmallButton
             // 
+            panelSmallButton.Controls.Add(buttonPlayListCear);
             panelSmallButton.Controls.Add(buttonPlayListShuffle);
             panelSmallButton.Controls.Add(buttonOpenExplorer);
             panelSmallButton.Controls.Add(buttonSmallPause);
@@ -177,6 +180,18 @@
             panelSmallButton.Name = "panelSmallButton";
             panelSmallButton.Size = new Size(366, 50);
             panelSmallButton.TabIndex = 7;
+            // 
+            // buttonPlayListShuffle
+            // 
+            buttonPlayListShuffle.ImageIndex = 8;
+            buttonPlayListShuffle.ImageList = imageListSmallIcon;
+            buttonPlayListShuffle.Location = new Point(274, 6);
+            buttonPlayListShuffle.Margin = new Padding(0);
+            buttonPlayListShuffle.Name = "buttonPlayListShuffle";
+            buttonPlayListShuffle.Size = new Size(32, 32);
+            buttonPlayListShuffle.TabIndex = 5;
+            buttonPlayListShuffle.UseVisualStyleBackColor = false;
+            buttonPlayListShuffle.Click += buttonPlayListShuffle_Click;
             // 
             // buttonOpenExplorer
             // 
@@ -350,17 +365,17 @@
             tableLayoutPanel1.Size = new Size(784, 15);
             tableLayoutPanel1.TabIndex = 11;
             // 
-            // buttonPlayListShuffle
+            // buttonPlayListCear
             // 
-            buttonPlayListShuffle.ImageIndex = 8;
-            buttonPlayListShuffle.ImageList = imageListSmallIcon;
-            buttonPlayListShuffle.Location = new Point(274, 6);
-            buttonPlayListShuffle.Margin = new Padding(0);
-            buttonPlayListShuffle.Name = "buttonPlayListShuffle";
-            buttonPlayListShuffle.Size = new Size(32, 32);
-            buttonPlayListShuffle.TabIndex = 5;
-            buttonPlayListShuffle.UseVisualStyleBackColor = false;
-            buttonPlayListShuffle.Click += buttonPlayListShuffle_Click;
+            buttonPlayListCear.ImageIndex = 9;
+            buttonPlayListCear.ImageList = imageListSmallIcon;
+            buttonPlayListCear.Location = new Point(324, 6);
+            buttonPlayListCear.Margin = new Padding(0);
+            buttonPlayListCear.Name = "buttonPlayListCear";
+            buttonPlayListCear.Size = new Size(32, 32);
+            buttonPlayListCear.TabIndex = 6;
+            buttonPlayListCear.UseVisualStyleBackColor = false;
+            buttonPlayListCear.Click += buttonPlayListCear_Click;
             // 
             // MainForm
             // 
@@ -418,5 +433,6 @@
         private ToolStripMenuItem toolStripMenuItemPlayListLoad;
         private Button buttonOpenExplorer;
         private Button buttonPlayListShuffle;
+        private Button buttonPlayListCear;
     }
 }
